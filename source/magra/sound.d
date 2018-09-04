@@ -1,11 +1,9 @@
 module magra.sound;
 
-import derelict.sdl2.mixer;
-
 float musicVolume = 1.0;
 float soundVolume = 1.0;
 
-void playMusic(Mix_Music* music)
+/*void playMusic(Mix_Music* music)
 {
     if(music == null)
         return;
@@ -38,4 +36,4 @@ void playSound(Mix_Chunk* sfx, float pan, float volume)
 void stopMusic()
 {
     Mix_HaltMusic();
-}
+}*/

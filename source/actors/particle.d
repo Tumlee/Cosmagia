@@ -1,7 +1,7 @@
 module lightwave.particle;
 
-import magra.base, magra.extras.graphics;
-import lightwave.resources, lightwave.drawers;
+import magra.base;
+import lightwave.resources;
 import lightwave.gravsource;
 import xypoint;
 import std.math, std.algorithm;
@@ -10,7 +10,7 @@ class AParticle : Actor
 {
     XYPoint pos;
     XYPoint vel;
-    PositionQueue pqueue;
+    //PositionQueue pqueue;
     float radius = 4.0;
     AGravSource hit = null;
     float deathClock = 1.0;
@@ -19,7 +19,7 @@ class AParticle : Actor
     {
         pos = p;
         vel = v;
-        pqueue = new PositionQueue(8);
+        //pqueue = new PositionQueue(8);
     }
 
     pure XYPoint gravVector(AGravSource source)
@@ -48,8 +48,8 @@ class AParticle : Actor
             deathClock -= 1.0 / 10.0;
             auto alpha = fmax(deathClock, 0.0);
             
-            particleLayer.add(new CParticle(dot, pos, 1.0, 0.0, 1.0, alpha * alpha, 0.66));
-            glowLayer.add(new CParticle(glow, pos, 1.0, 0.0, 1.0, alpha * alpha * .5, 1.1));
+            //particleLayer.add(new CParticle(dot, pos, 1.0, 0.0, 1.0, alpha * alpha, 0.66));
+            //glowLayer.add(new CParticle(glow, pos, 1.0, 0.0, 1.0, alpha * alpha * .5, 1.1));
             
             return deathClock > 0.0;
         }
@@ -61,7 +61,7 @@ class AParticle : Actor
             vel += curGrav / gravityIterations;
             pos += vel / gravityIterations;
 
-            pqueue.pushPosition(pos);
+            //pqueue.pushPosition(pos);
 
             foreach(source; gravitySources)
             {
@@ -85,14 +85,14 @@ class AParticle : Actor
         auto val = fmin(.66 + (vel.mag / 2.5), 1.0);
         auto sat = fmin(vel.mag / 1.0, 1.0);
         
-        particleLayer.add(new TParticle(dot, pqueue, vel.ang, sat, val, 1.0, 0.66));
+        //particleLayer.add(new TParticle(dot, pqueue, vel.ang, sat, val, 1.0, 0.66));
 
         if(curGrav.mag > .03)
         {
             //Should scale from 0% at .2 to 100% at .4
             auto glowAmount = sqrt(fmin((curGrav.mag - .03) / .35, 1.0));
             
-            glowLayer.add(new CParticle(glow, pos, vel.ang, 1.0, 1.0, glowAmount, 1.1));
+            //glowLayer.add(new CParticle(glow, pos, vel.ang, 1.0, 1.0, glowAmount, 1.1));
         }
         
         return true;

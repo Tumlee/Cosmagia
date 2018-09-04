@@ -1,6 +1,6 @@
 module lightwave.gravsource;
-import magra.base, magra.extras.graphics;
-import lightwave.resources, lightwave.drawers;
+import magra.base;
+import lightwave.resources;
 import xypoint;
 import std.array, std.math;
 
@@ -28,8 +28,8 @@ class AGravSource : Actor
 
         auto sat = fmin(vel.mag / 4.0, 1.0);
     
-        glowLayer.add(new CParticle(glow, pos, vel.ang, sat, 1.0, 1.0, fmin(sin(lifeTime * 7.0) * .1 + 1.1 + (vel.mag / 8.0), 10.0)));
-        glowLayer.add(new CParticle(glow, pos, vel.ang, sat * .2, 1.0, 1.0, .8));
+        //glowLayer.add(new CParticle(glow, pos, vel.ang, sat, 1.0, 1.0, fmin(sin(lifeTime * 7.0) * .1 + 1.1 + (vel.mag / 8.0), 10.0)));
+        //glowLayer.add(new CParticle(glow, pos, vel.ang, sat * .2, 1.0, 1.0, .8));
         return true;
     }
 }

@@ -1,8 +1,6 @@
 import magra.base;
-import magra.extras.graphics;
 import xypoint;
 import std.conv;
-import lightwave.drawers;
 import lightwave.gravsource, lightwave.particle;
 import lightwave.resources;
 
@@ -12,7 +10,7 @@ void myTicker()
 {
     backgroundTime += 1.0 / 60.0;
 
-    backLayer.add(new BGDrawer(backgroundTime));
+    /*backLayer.add(new BGDrawer(backgroundTime));
     
     if(keyboard[SDLK_ESCAPE].isFresh)
         gameLoop.quitting = true;
@@ -53,7 +51,7 @@ void myTicker()
     {
         actors.clear!()();
         updateGravitySources();
-    }
+    }*/
 }
 
 void main(string[] args)

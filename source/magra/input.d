@@ -1,7 +1,5 @@
 module magra.input;
 
-import derelict.sdl2.sdl;
-
 enum KeyState
 {
     up,
@@ -15,14 +13,14 @@ class Keyboard
     //Keys are created dynamically as they are pressed.
     KeyState[int] keys;
     
-    void handleEvent(SDL_Event event)
+    /*void handleEvent(SDL_Event event)
     {
         if(event.type == SDL_KEYDOWN && !event.key.repeat)
             keys[event.key.keysym.sym] = KeyState.fresh;
         
         if(event.type == SDL_KEYUP && !event.key.repeat)
             keys[event.key.keysym.sym] = KeyState.released;
-    }
+    }*/
     
     void update()
     {
@@ -66,7 +64,7 @@ class Mouse
     int accRelx, accRely;
     int accWheelx, accWheely;
     
-    void handleEvent(SDL_Event event)
+    /*void handleEvent(SDL_Event event)
     {
         if(event.type == SDL_MOUSEBUTTONDOWN)
             buttons[event.button.button] = KeyState.fresh;
@@ -88,7 +86,7 @@ class Mouse
             accWheelx += event.wheel.x;
             accWheely += event.wheel.y;
         }
-    }
+    }*/
     
     void update()
     {

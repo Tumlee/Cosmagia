@@ -20,18 +20,17 @@ class InitSettings
     void initializeEngine()
     {
         //Load up Derelict.
-        DerelictSDL2.load();
-        DerelictSDL2Image.load();
-        DerelictSDL2Mixer.load();
+        //DerelictSDL2.load();
+        //DerelictSDL2Image.load();
+        //DerelictSDL2Mixer.load();
 
         //Initialize global Magra classes.
-        canvas = new Canvas;
         mouse = new Mouse;
         keyboard = new Keyboard;
         actors = new ActorList;
         gameLoop = new GameLoop;
         
-        auto windowFlags = SDL_WINDOW_OPENGL;
+        /*auto windowFlags = SDL_WINDOW_OPENGL;
         
         if(fullscreen)
             windowFlags |= SDL_WINDOW_FULLSCREEN_DESKTOP;
@@ -46,17 +45,17 @@ class InitSettings
         enforce(renderer, "Failed to set up an SDL renderer.");
         
         SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "Bilinear");
-        SDL_RenderSetLogicalSize(renderer, screenWidth, screenHeight);
+        SDL_RenderSetLogicalSize(renderer, screenWidth, screenHeight);*/
 
-        canvas.targetRenderer = renderer;
+        //canvas.targetRenderer = renderer;
         
-        IMG_Init(IMG_INIT_PNG);
+        //IMG_Init(IMG_INIT_PNG);
         
         //Set up sound.
-	    enforce(Mix_OpenAudio(soundSampleRate, AUDIO_S16SYS, 2, soundBufferSize) == 0,
-	            "Failed to initialize audio mixer.");
+	    /*enforce(Mix_OpenAudio(soundSampleRate, AUDIO_S16SYS, 2, soundBufferSize) == 0,
+	            "Failed to initialize audio mixer.");*/
 	            
-	    Mix_AllocateChannels(soundChannels);
-	    Mix_Volume(-1, MIX_MAX_VOLUME);
+	    /*Mix_AllocateChannels(soundChannels);
+	    Mix_Volume(-1, MIX_MAX_VOLUME);*/
     }
 }
