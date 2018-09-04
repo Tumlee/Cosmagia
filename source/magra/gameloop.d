@@ -1,5 +1,6 @@
 module magra.gameloop;
 
+import derelict.glfw3;
 import std.exception;
 import magra.globals;
 import magra.time;
@@ -25,19 +26,8 @@ class GameLoop
             mouse.update();
             keyboard.update();
             
-            //Process all events and send them to the appropriate place.
-            //SDL_Event event;
-
-            /*while(SDL_PollEvent(&event))
-            {
-                //Pass this event to the mouse and keyboard
-                //to see if it's anything they can handle.
-                keyboard.handleEvent(event);
-                mouse.handleEvent(event);
-
-                if(eventHandler !is null)
-                    eventHandler(event);
-            }*/
+            //Process any events caught by GLFW
+            glfwPollEvents();
             
             //Run the game logic
             if(preTick !is null)
