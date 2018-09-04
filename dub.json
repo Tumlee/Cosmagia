@@ -1,0 +1,10 @@
+{
+	"name": "lightwave",
+	"targetPath": "bin",
+	"description": "A minimal D application.",
+	"copyright": "Copyright © 2018, tumlee",
+	"authors": ["tumlee"],
+	"dependencies": {
+	    "derelict-sdl2":"~>1.0.0",
+	}
+}
