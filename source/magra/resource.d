@@ -25,12 +25,13 @@ SDL_Texture* loadTexture(const char[] filename)
     return texture;
 }
 
-Mix_Chunk* loadSound(const char[] filename)
+//FIXME-GLFW: This is to be handled by OpenAL later on.
+/*Mix_Chunk* loadSound(const char[] filename)
 {
     return Mix_LoadWAV(("resources/" ~ filename).toStringz);
-}
+}*/
 
-Mix_Music* loadMusic(const char[] filename)
+/*Mix_Music* loadMusic(const char[] filename)
 {
     return Mix_LoadMUS(("resources/" ~ filename).toStringz);
-}
+}*/
