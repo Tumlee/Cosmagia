@@ -1,10 +1,13 @@
 {
 	"name": "lightwave",
 	"targetPath": "bin",
-	"description": "A minimal D application.",
+	"description": "A particle simulation.",
 	"copyright": "Copyright © 2018, tumlee",
 	"authors": ["tumlee"],
 	"dependencies": {
-	    "derelict-sdl2":"~>1.0.0",
+        "derelict-glfw3": "4.0.0-beta.1",
+        "derelict-gl3": "2.0.0-beta.6",
+        "derelict-il": "2.0.0-beta.2",
+        "derelict-ft": "2.0.0-beta.4",
 	}
 }
