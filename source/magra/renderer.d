@@ -96,7 +96,7 @@ class QuadBuffer
     VAO vao;
     VBO vbo;
     EBO ebo;
-    Texture2D currentTexture = null;
+    Texture2D[] textures;
     ShaderProgram program;
     
     GLuint[] eboData;
@@ -180,19 +180,18 @@ class QuadBuffer
 
     void draw()
     {
-        if(currentTexture is null)
-            throw new Exception("Tried to draw a QuadBuffer without a texture.");
-
-        currentTexture.bind();
+        foreach(tex; textures)
+            tex.bind();
+            
         program.use();
         
         vbo.buffer(vboData[0 .. currentElement * quadLength], GL_STATIC_DRAW);
         ebo.draw(cast(int) (currentElement * 6));
     }
 
-    void setTexture(Texture2D tex)
+    void addTexture(Texture2D tex)
     {
-        currentTexture = tex;
+        textures ~= tex;
     }
 
     //The size of four vertexes.
