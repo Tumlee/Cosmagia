@@ -1,9 +1,10 @@
 module lightwave.resources;
 
 import magra.base;
+import magra.renderer;
 
-/*Layer backLayer, gravLayer, particleLayer, glowLayer;
-SDL_Texture* bgstars, bgcolor;
+QuadBuffer starQB, particleQB, gravQB, glowQB;
+/*SDL_Texture* bgstars, bgcolor;
 SDL_Texture*[2] colorStars;
 SDL_Texture* bg;
 
@@ -12,6 +13,15 @@ SDL_Texture* glow;*/
 
 void loadResources()
 {
+    starQB = new QuadBuffer;
+    particleQB = new QuadBuffer;
+    gravQB = new QuadBuffer;
+    glowQB = new QuadBuffer;
+
+    renderingQueue.registerLayer(starQB, 0);
+    renderingQueue.registerLayer(particleQB, 1);
+    renderingQueue.registerLayer(gravQB, 2);
+    renderingQueue.registerLayer(glowQB, 3);
     /*dot = loadTexture("dot.png");
     glow = loadTexture("glow.png");
     bgstars = loadTexture("bgstars.png");
@@ -23,15 +33,5 @@ void loadResources()
     {
         colorStars[i] = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_TARGET,
                                             texWidth(bgstars), texHeight(bgstars));
-    }
-
-    SDL_SetTextureBlendMode(glow, SDL_BLENDMODE_ADD);
-    SDL_SetTextureBlendMode(bgcolor, SDL_BLENDMODE_MOD);
-    SDL_SetTextureBlendMode(colorStars[0], SDL_BLENDMODE_ADD);
-    SDL_SetTextureBlendMode(colorStars[1], SDL_BLENDMODE_ADD);
-    
-    backLayer = canvas.register(0);
-    particleLayer = canvas.register(1);
-    gravLayer = canvas.register(2);
-    glowLayer = canvas.register(3);*/
+    }*/
 }

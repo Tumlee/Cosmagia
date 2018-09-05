@@ -4,6 +4,7 @@ import derelict.glfw3;
 import std.exception;
 import magra.globals;
 import magra.time;
+import magra.renderer;
 
 class GameLoop
 {
@@ -38,15 +39,11 @@ class GameLoop
             if(postTick !is null)
                 postTick();
                 
-            //Re-enable the canvas so it doesn't get stuck.
-            //canvas.enabled = true;
-            
             //Render the game scene, if we're not behind.
             if(goalTime > currentTimeMS())
-            {
-                //canvas.draw();
-                //canvas.clear();
-            }
+                renderingQueue.drawLayers();
+                
+            renderingQueue.clearLayers();
             
             //Wait for goal time.
             auto timeToWait = goalTime - currentTimeMS();
@@ -56,12 +53,7 @@ class GameLoop
                 delayMS(cast(long) timeToWait);
                 
                 //Flip the display.
-                //SDL_RenderPresent(renderer);
-            }
-            else
-            {
-                //Disable rendering to all layers for the next tic.
-                //canvas.enabled = false;
+                glfwSwapBuffers(window);
             }
         }
     }

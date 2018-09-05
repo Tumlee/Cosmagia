@@ -28,6 +28,7 @@ class InitSettings
         mouse = new Mouse;
         keyboard = new Keyboard;
         actors = new ActorList;
+        renderingQueue = new RenderingQueue;
         gameLoop = new GameLoop;
         
         //Set up sound.
