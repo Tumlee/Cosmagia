@@ -8,11 +8,22 @@ import std.exception;
 import std.file;
 import std.path;
 
+string getResourcesPath()
+{
+    static string generatedPath = null;
+
+    if(generatedPath is null)
+        generatedPath = thisExePath.dirName ~ "/resources/";
+
+    return generatedPath;
+}
+    
+
 Texture2D loadTexture(string filename, int textureUnit)
 {
     Texture2D newTex = new Texture2D(textureUnit);
 
-    string absolutePath = thisExePath.dirName ~ "/resources/" ~ filename;
+    string absolutePath = getResourcesPath ~ filename;
     
     if(!newTex.load(absolutePath))
         throw new Exception("Failed to load texture from " ~ absolutePath);
