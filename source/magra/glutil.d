@@ -402,7 +402,7 @@ class Texture2D
                 iluFlipImage();
         
             if(!ilConvertImage(IL_RGBA, IL_FLOAT))
-                throw new Exception("Image conversion failed, reason: " ~ ilGetError().to!string);
+                throw new Exception("Image conversion failed, reason: " ~ iluErrorString(ilGetError()).to!string);
 
             bind();
 
@@ -416,7 +416,7 @@ class Texture2D
         }
         else
         {
-            throw new Exception("Image loading failed, reason: " ~ ilGetError().to!string);
+            throw new Exception("Image loading failed, reason: " ~ iluErrorString(ilGetError()).to!string);
         }
 
         ilDeleteImages(1, &image);
