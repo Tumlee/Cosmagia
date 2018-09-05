@@ -2,6 +2,7 @@ module magra.renderer;
 
 import std.file;
 import std.format;
+import std.algorithm;
 import derelict.opengl;
 import derelict.glfw3.glfw3;
 import derelict.devil.il;
@@ -203,6 +204,44 @@ class QuadBuffer
     void clear()
     {
         currentElement = 0;
+    }
+}
+
+class RenderingQueue
+{
+    struct Layer
+    {
+        QuadBuffer qbuf;
+        int layerID;
+    }
+    
+    private Layer[] layers;
+
+    void registerLayer(QuadBuffer qbuf, int layerID)
+    {
+        //No two layers may share a layerID.
+        if(layers.canFind!(layer => layer.layerID == layerID))
+            throw new Exception("Tried to register a Layer with an already-existing layerID");
+
+        Layer newLayer;
+        newLayer.qbuf = qbuf;
+        newLayer.layerID = layerID;
+        layers ~= newLayer;
+
+        //Make sure the layers are sorted so that they are drawn in order.
+        layers.sort!((a,b) => a.layerID < b.layerID);
+    }
+
+    void drawLayers()
+    {
+        foreach(layer; layers)
+            layer.qbuf.draw();
+    }
+
+    void clearLayers()
+    {
+        foreach(layer; layers)
+            layer.qbuf.clear();
     }
 }
 
