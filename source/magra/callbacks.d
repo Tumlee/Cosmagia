@@ -3,6 +3,7 @@ module magra.callbacks;
 import derelict.glfw3.glfw3;
 import derelict.opengl;
 import magra.renderer;
+import magra.globals;
 
 import std.stdio;   //FIXME: PLACEHOLDER ONLY
 
@@ -25,9 +26,11 @@ extern (C) nothrow
     {
         try
         {
-            //if(action == GLFW_PRESS && key == GLFW_KEY_ESCAPE)
-            //    terminating = true;
-            writeln("Keyboard press");
+            if(action == GLFW_PRESS)
+                keyboard.pressKey(key);
+
+            if(action == GLFW_RELEASE)
+                keyboard.releaseKey(key);
         }
         catch(Exception e)
         {
@@ -43,11 +46,10 @@ extern (C) nothrow
             //Match OpenGL's convention of making the screen go -1.0 -> 1.0
             //Rather than 0 -> screen(width/height)
             //Don't forget that y coordinate is flipped in OpenGL
-            //mpx = (xpos * 2 / screenwidth) - 1;
-            //mpy = 1 - (ypos * 2 / screenheight);
+            double mpx = (xpos * 2 / screenwidth) - 1;
+            double mpy = 1 - (ypos * 2 / screenheight);
             
-            //onMotion(mousePosition);
-            writefln("Mouse motion: (%.2f, %2.f)", xpos, ypos);
+            mouse.move(mpx, mpy);
         }
         catch(Exception e)
         {
@@ -60,14 +62,11 @@ extern (C) nothrow
     {
         try
         {
-            /*if(action == GLFW_PRESS)
-                onClick(mousePosition);
+            if(action == GLFW_PRESS)
+                mouse.pressButton(button);
 
             if(action == GLFW_RELEASE)
-                onRelease();*/
-
-            writefln("Mouse button: b=%d, a=%d", button, action);
-
+                mouse.releaseButton(button);
             //mouseButtonState[button] = action;
         }
         catch(Exception e)

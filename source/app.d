@@ -3,6 +3,7 @@ import xypoint;
 import std.conv;
 import lightwave.gravsource, lightwave.particle;
 import lightwave.resources;
+import derelict.glfw3;
 
 float backgroundTime = 0.0;
 
@@ -10,18 +11,18 @@ void myTicker()
 {
     backgroundTime += 1.0 / 60.0;
 
-    /*backLayer.add(new BGDrawer(backgroundTime));
+    //backLayer.add(new BGDrawer(backgroundTime));
     
-    if(keyboard[SDLK_ESCAPE].isFresh)
+    if(keyboard[GLFW_KEY_ESCAPE].isFresh)
         gameLoop.quitting = true;
 
-    if(mouse[1].isFresh)
+    if(mouse[GLFW_MOUSE_BUTTON_LEFT].isFresh)
     {
         actors.spawn(new AGravSource(mouse.x, mouse.y));
         updateGravitySources();
     }
 
-    if(keyboard[SDLK_r].isDown)
+    if(keyboard[GLFW_KEY_R].isDown)
     {
         import std.random;
         auto rpos = XYPoint(uniform(0, 1366), uniform(0, 768));
@@ -30,7 +31,7 @@ void myTicker()
         actors.spawn(new AParticle(rpos, rvel));
     }
 
-    if(keyboard[SDLK_w].isFresh)
+    if(keyboard[GLFW_KEY_W].isFresh)
     {
         import std.random;
 
@@ -47,11 +48,11 @@ void myTicker()
         }        
     }
         
-    if(keyboard[SDLK_DELETE].isFresh)
+    if(keyboard[GLFW_KEY_DELETE].isFresh)
     {
         actors.clear!()();
         updateGravitySources();
-    }*/
+    }
 }
 
 void main(string[] args)

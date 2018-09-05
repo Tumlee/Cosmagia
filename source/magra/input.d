@@ -12,15 +12,16 @@ class Keyboard
 {
     //Keys are created dynamically as they are pressed.
     KeyState[int] keys;
-    
-    /*void handleEvent(SDL_Event event)
+
+    void pressKey(int key)
     {
-        if(event.type == SDL_KEYDOWN && !event.key.repeat)
-            keys[event.key.keysym.sym] = KeyState.fresh;
-        
-        if(event.type == SDL_KEYUP && !event.key.repeat)
-            keys[event.key.keysym.sym] = KeyState.released;
-    }*/
+        keys[key] = KeyState.fresh;
+    }
+
+    void releaseKey(int key)
+    {
+        keys[key] = KeyState.released;
+    }
     
     void update()
     {
@@ -52,55 +53,40 @@ class Keyboard
 
 class Mouse
 {
-    KeyState[int] buttons;
-    
     //Information about current state of buttons.
-    int x, y;
-    int dx, dy;
-    int wheelx, wheely;
+    KeyState[int] buttons;
+
+    //Current X and Y position. dx and dy will be provided later.
+    double x, y;
+    //int dx, dy;
+    //int wheelx, wheely;
     
-    //Information that is accumulated through events,
-    //and actually takes effect later. 
-    int accRelx, accRely;
-    int accWheelx, accWheely;
-    
-    /*void handleEvent(SDL_Event event)
+    void pressButton(int button)
     {
-        if(event.type == SDL_MOUSEBUTTONDOWN)
-            buttons[event.button.button] = KeyState.fresh;
-            
-        if(event.type == SDL_MOUSEBUTTONUP)
-            buttons[event.button.button] = KeyState.released;
-            
-        if(event.type == SDL_MOUSEMOTION)
-        {
-            x = event.motion.x;
-            y = event.motion.y;
-            
-            accRelx = event.motion.xrel;
-            accRely = event.motion.yrel;
-        }
-        
-        if(event.type == SDL_MOUSEWHEEL)
-        {
-            accWheelx += event.wheel.x;
-            accWheely += event.wheel.y;
-        }
-    }*/
+        buttons[button] = KeyState.fresh;
+    }
+
+    void releaseButton(int button)
+    {
+        buttons[button] = KeyState.up;
+    }
+
+    void move(double xx, double yy)
+    {
+        x = xx;
+        y = yy;
+    }
     
     void update()
     {
-        dx = accRelx;
-        dy = accRely;
-        
-        wheelx = accWheelx;
-        wheely = accWheely;
-        
-        accRelx = 0;
-        accRely = 0;
-        
-        accWheelx = 0;
-        accWheely = 0;
+        //dx = accRelx;
+        //dy = accRely;
+        //wheelx = accWheelx;
+        //wheely = accWheely;
+        //accRelx = 0;
+        //accRely = 0;
+        //accWheelx = 0;
+        //accWheely = 0;
     
         foreach(ref state; buttons)
         {
