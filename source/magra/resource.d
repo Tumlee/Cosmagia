@@ -1,25 +1,24 @@
 module magra.resource;
 
 import magra.globals;
+import magra.glutil;
 
 import std.string;
 import std.exception;
+import std.file;
+import std.path;
 
-/*SDL_Texture* loadTexture(const char[] filename)
+Texture2D loadTexture(string filename, int textureUnit)
 {
-    enforce(renderer !is null, "Loaded a texture without a renderer.");
+    Texture2D newTex = new Texture2D(textureUnit);
+
+    string absolutePath = thisExePath.dirName ~ "/resources/" ~ filename;
     
-    auto surface = IMG_Load(("resources/" ~ filename).toStringz);
+    if(!newTex.load(absolutePath))
+        throw new Exception("Failed to load texture from " ~ absolutePath);
     
-    if(surface is null)
-        return null;
-    
-    auto texture = SDL_CreateTextureFromSurface(renderer, surface);
-    
-    SDL_FreeSurface(surface);
-    
-    return texture;
-}*/
+    return newTex;
+}
 
 //FIXME-GLFW: This is to be handled by OpenAL later on.
 /*Mix_Chunk* loadSound(const char[] filename)
