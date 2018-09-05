@@ -187,7 +187,6 @@ class QuadBuffer
         
         vbo.buffer(vboData[0 .. currentElement * quadLength], GL_STATIC_DRAW);
         ebo.draw(cast(int) (currentElement * 6));
-        currentElement = 0;
     }
 
     void setTexture(Texture2D tex)
@@ -199,6 +198,11 @@ class QuadBuffer
     size_t quadLength()
     {
         return vao.totalAttributeLength * 4;
+    }
+
+    void clear()
+    {
+        currentElement = 0;
     }
 }
 
