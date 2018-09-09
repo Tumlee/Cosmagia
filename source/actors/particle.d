@@ -46,7 +46,7 @@ class AParticle : Actor
     {
         pos = p;
         vel = v;
-        pqueue = new PositionQueue(8);
+        pqueue = new PositionQueue(6);
     }
 
     pure XYPoint gravVector(AGravSource source)
@@ -129,7 +129,11 @@ class AParticle : Actor
         foreach(i; 0 .. pqueue.numPositions)
         {
             float alpha = (cast(float) (i + 1) / pqueue.numPositions);
-            drawParticle(pos, radius * (.5 + alpha / 2), RGBA.fromHSVA(vel.ang, sat, val, alpha));
+
+            if(i != pqueue.numPositions - 1)
+                alpha *= .5;
+            
+            drawParticle(pqueue.getPosition(i), radius, RGBA.fromHSVA(vel.ang, sat, val, alpha));
         }
     }
 }
