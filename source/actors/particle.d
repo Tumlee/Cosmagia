@@ -38,7 +38,7 @@ class AParticle : Actor
     XYPoint pos;
     XYPoint vel;
     PositionQueue pqueue;
-    float radius = 3.0;
+    float radius = 2.5;
     AGravSource hit = null;
     float deathClock = 1.0;
 
