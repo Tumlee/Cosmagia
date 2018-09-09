@@ -49,9 +49,16 @@ void loadResources()
     gravQB.setBlendMode(GL_ONE_MINUS_DST_COLOR, GL_ONE);
     
     glowQB = new QuadBuffer;
+    glowQB.addAttribute("vWorldPos", 0, 2);
+    glowQB.addAttribute("vTexPos", 1, 2);
+    glowQB.addAttribute("vParticleColor", 2, 4);
+    glowQB.setupShaderPair("particle");
+    glowQB.program.setUniform("tex", 0);
+    glowQB.addTexture(glowTX);
+    glowQB.setBlendMode(GL_ONE_MINUS_DST_COLOR, GL_ONE);
 
     renderingQueue.registerLayer(starQB, 0);
     renderingQueue.registerLayer(particleQB, 1);
     renderingQueue.registerLayer(gravQB, 2);
-    //renderingQueue.registerLayer(glowQB, 3);
+    renderingQueue.registerLayer(glowQB, 3);
 }
