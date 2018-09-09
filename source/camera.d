@@ -3,12 +3,17 @@ module lightwave.camera;
 import xypoint;
 import lightwave.resources;
 import magra.renderer;
+import magra.callbacks;
 
 XYPoint camOrigin;
 XYPoint camRange;
 
 void initCamera()
 {
+    //Set up a window resize callback, camera needs to be adusted whenever the
+    //viewing window changes size.
+    addWindowResizeCallback(&adjustCameraToWindowResize);
+    
     camOrigin = XYPoint(0, 0);
     camRange = XYPoint(200.0 * screenwidth / screenheight, 200.0);
     syncCamera();
@@ -50,4 +55,12 @@ void syncCamera()
         qbuf.program.setUniform("camRange", camRange.x, camRange.y);
         qbuf.program.setUniform("camOrigin", camOrigin.x, camOrigin.y);
     }
+}
+
+//Whenever the window size changes, we must make sure that the aspect
+//ratio is still correct for the camRange.
+void adjustCameraToWindowResize()
+{
+    camRange = XYPoint(camRange.y * screenwidth / screenheight, camRange.y);
+    syncCamera();
 }
