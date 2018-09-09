@@ -6,6 +6,32 @@ import lightwave.gravsource;
 import xypoint;
 import std.math, std.algorithm;
 
+void drawParticle(XYPoint center, float radius)
+{
+    int vertexLength = particleQB.vao.totalAttributeLength;
+    static float[] bufferData;
+
+    if(bufferData.length == 0)
+        bufferData.length = vertexLength * 4;
+
+    size_t vStart = 0;
+
+    enum float[] xtab = [0, 1, 1, 0];
+    enum float[] ytab = [1, 1, 0, 0];
+    
+    foreach(int i; 0 .. 4)
+    {
+        float x = xtab[i];
+        float y = ytab[i];
+        float vx = center.x + radius * 2 * (x - .5);
+        float vy = center.y + radius * 2 * (y - .5);
+        bufferData[vStart .. vStart + vertexLength] = [vx, vy, x, y, 1.0, 1.0, 1.0, 1.0];
+        vStart += vertexLength;
+    }
+
+    particleQB.addElement(bufferData);
+}
+
 class AParticle : Actor
 {
     XYPoint pos;
@@ -86,6 +112,7 @@ class AParticle : Actor
         auto sat = fmin(vel.mag / 1.0, 1.0);
         
         //particleLayer.add(new TParticle(dot, pqueue, vel.ang, sat, val, 1.0, 0.66));
+        drawParticle(pos, radius);
 
         if(curGrav.mag > .03)
         {
