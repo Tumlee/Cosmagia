@@ -4,7 +4,7 @@ import std.file;
 import std.format;
 import std.algorithm;
 import std.math;
-import derelict.opengl;
+public import derelict.opengl;
 import derelict.glfw3.glfw3;
 import derelict.devil.il;
 import derelict.devil.ilu;
@@ -105,6 +105,10 @@ class QuadBuffer
     size_t currentLength = 0;
     size_t currentElement = 0;
 
+    //Information about the blending mode that should be used while drawing.
+    GLenum sBlendMode = GL_SRC_ALPHA;
+  	GLenum dBlendMode = GL_ONE_MINUS_SRC_ALPHA;
+
     this()
     {
         vao = new VAO;
@@ -181,6 +185,9 @@ class QuadBuffer
 
     void draw()
     {
+        //Set up the chosen blending mode.
+        glBlendFunc(sBlendMode, dBlendMode);
+ 
         foreach(tex; textures)
             tex.bind();
             
@@ -193,6 +200,12 @@ class QuadBuffer
     void addTexture(Texture2D tex)
     {
         textures ~= tex;
+    }
+
+    void setBlendMode(GLenum sMode, GLenum dMode)
+    {
+        sBlendMode = sMode;
+        dBlendMode = dMode;
     }
 
     //The size of four vertexes.
