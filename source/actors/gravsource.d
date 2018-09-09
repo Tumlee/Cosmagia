@@ -1,10 +1,11 @@
 module lightwave.gravsource;
 import magra.base;
 import lightwave.resources;
+import magra.renderer;
 import xypoint;
 import std.array, std.math;
 
-void drawGrav(XYPoint center, float radius)
+void drawGrav(XYPoint center, float radius, RGBA color)
 {
     int vertexLength = gravQB.vao.totalAttributeLength;
     static float[] bufferData;
@@ -23,7 +24,7 @@ void drawGrav(XYPoint center, float radius)
         float y = ytab[i];
         float vx = center.x + radius * 3 * (x - .5);
         float vy = center.y + radius * 3 * (y - .5);
-        bufferData[vStart .. vStart + vertexLength] = [vx, vy, x, y, 1.0, 1.0, 1.0, 1.0];
+        bufferData[vStart .. vStart + vertexLength] = [vx, vy, x, y, color.r, color.g, color.b, color.a];
         vStart += vertexLength;
     }
 
@@ -53,11 +54,13 @@ class AGravSource : Actor
         vel *= .92;
 
         auto sat = fmin(vel.mag / 4.0, 1.0);
-    
-        //glowLayer.add(new CParticle(glow, pos, vel.ang, sat, 1.0, 1.0, fmin(sin(lifeTime * 7.0) * .1 + 1.1 + (vel.mag / 8.0), 10.0)));
-        //glowLayer.add(new CParticle(glow, pos, vel.ang, sat * .2, 1.0, 1.0, .8));
 
-        drawGrav(pos, fmin(sin(lifeTime * 7.0) * .1 + 1.1 + (vel.mag / 8.0), 10.0) * radius);
+        drawGrav(pos, fmin(sin(lifeTime * 7.0) * .1 + 1.1 + (vel.mag / 8.0), 10.0) * radius,
+                    RGBA.fromHSVA(vel.ang, sat, 1.0, 1.0));
+
+        drawGrav(pos, fmin(sin(lifeTime * 7.0) * .1 + 1.1 + (vel.mag / 8.0), 10.0) * radius * .7,
+                    RGBA.fromHSVA(vel.ang, sat * .2, 1.0, .7));
+                    
         return true;
     }
 }
