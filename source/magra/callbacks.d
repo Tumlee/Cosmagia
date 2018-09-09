@@ -11,12 +11,22 @@ import std.stdio;   //FIXME: PLACEHOLDER ONLY
 //instead store the Exception and immediately handle it as soon as a callback returns.
 Exception storedException = null;
 
+//User-defined callbacks that may be called whenever a window is resized.
+//Width and height do not need to be passed as a parameter --- screenheight
+//and screenwidth will already be the correct value when these callbacks are called.
+private void function()[] windowResizeCallbacks;
+
 void initCallbacks(GLFWwindow* window)
 {
     glfwSetKeyCallback(window, &keyCallback);
     glfwSetCursorPosCallback(window, &cursorPosCallback);
     glfwSetMouseButtonCallback(window, &mouseButtonCallback);
     glfwSetWindowSizeCallback(window, &windowSizeCallback);
+}
+
+void addWindowResizeCallback(void function() callback)
+{
+    windowResizeCallbacks ~= callback;
 }
 
 //GFLW callbacks...
@@ -82,8 +92,10 @@ extern (C) nothrow
         {
             screenwidth = width;
             screenheight = height;
-            writefln("Window size callback: %d x %d", width, height);
             glViewport(0, 0, width, height);
+
+            foreach(callback; windowResizeCallbacks)
+                callback();
         }
         catch(Exception e)
         {
