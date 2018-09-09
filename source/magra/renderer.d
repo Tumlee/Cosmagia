@@ -3,6 +3,7 @@ module magra.renderer;
 import std.file;
 import std.format;
 import std.algorithm;
+import std.math;
 import derelict.opengl;
 import derelict.glfw3.glfw3;
 import derelict.devil.il;
@@ -326,5 +327,44 @@ struct RGBA
         g = gg;
         b = bb;
         a = aa;
+    }
+
+    static RGBA fromHSVA(float h, float s, float v, float a)
+    {
+        //Returns a number from 0 to 1, determines the value of a given color component
+        //based on an angle expressed in radians.
+        static float aToColorVal(float a)
+        {
+            //Scale this angle so that 2PI gets scaled to 6.0
+            float scaled = fmod((a + (2.0 * PI)) * 6.0 / (2.0 * PI), 6.0);
+            float frac = fmod(scaled, 1.0);
+
+            if(scaled < 1.0)
+                return 1.0;
+
+            if(scaled < 2.0)
+                return 1.0 - frac;
+
+            if(scaled < 4.0)
+                return 0.0;
+
+            if(scaled < 5.0)
+                return frac;
+
+            return 1.0;
+        }
+
+        //Takes a number 0.0 through 1.0, and scales it
+        //from V(1 - S) to V
+        static float scaleBySV(float x, float s, float v)
+        {
+            return v * (x * s + 1 - s);
+        }
+        
+        float r = scaleBySV(aToColorVal(h), s, v);
+        float g = scaleBySV(aToColorVal(h + (PI * 2.0 / 3.0)), s, v);
+        float b = scaleBySV(aToColorVal(h + (PI * 4.0 / 3.0)), s, v);
+
+        return RGBA(r, g, b, a);
     }
 }
