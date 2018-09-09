@@ -40,7 +40,7 @@ class AGravSource : Actor
     
     this(float x, float y)
     {
-        mass = 256.0;
+        mass = 32.0;
         pos.x = x;
         pos.y = y;
         vel = XYPoint(0,0);

@@ -37,7 +37,7 @@ class AParticle : Actor
     XYPoint pos;
     XYPoint vel;
     //PositionQueue pqueue;
-    float radius = 4.0;
+    float radius = 3.0;
     AGravSource hit = null;
     float deathClock = 1.0;
 
@@ -100,10 +100,7 @@ class AParticle : Actor
             }
         }
 
-        if(pos.x < -128 || pos.x > 1366 + 128) 
-            return false;
-
-        if(pos.y < -128 || pos.y > 768 + 128)
+        if(pos.mag() > 1024)
             return false;
 
         //Draw the particle, the color is determined by the direction of movement.

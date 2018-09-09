@@ -46,14 +46,15 @@ void myTicker()
 
     if(mouse[GLFW_MOUSE_BUTTON_LEFT].isFresh)
     {
-        actors.spawn(new AGravSource(mouse.x, mouse.y));
+        auto worldCoordinate = screenToWorldCoordinate(XYPoint(mouse.x, mouse.y));
+        actors.spawn(new AGravSource(worldCoordinate.x, worldCoordinate.y));
         updateGravitySources();
     }
 
     if(keyboard[GLFW_KEY_R].isDown)
     {
         import std.random;
-        auto rpos = XYPoint(uniform(0, 1366), uniform(0, 768));
+        auto rpos = XYPoint(uniform(-512, 512), uniform(-512, 512));
         auto rvel = XYPoint(uniform(-4, 4), uniform(-4, 4));
 
         actors.spawn(new AParticle(rpos, rvel));
@@ -63,17 +64,13 @@ void myTicker()
     {
         import std.random;
 
-        foreach(x; 0 .. (1366/4))
+        for(float r = 0; r < 3.141 * 2; r += .01)
         {
-            actors.spawn(new AParticle(XYPoint(x * 4, 0), XYPoint(0,0)));
-            actors.spawn(new AParticle(XYPoint(x * 4, 768), XYPoint(0,0)));
+            import std.math;
+            float x = cos(r);
+            float y = sin(r);
+            actors.spawn(new AParticle(XYPoint(x, y) * 256, XYPoint(0,0)));
         }
-        
-        foreach(y; 0 .. (768/4))
-        {
-            actors.spawn(new AParticle(XYPoint(0, y * 4), XYPoint(0,0)));
-            actors.spawn(new AParticle(XYPoint(1366, y * 4), XYPoint(0,0)));
-        }        
     }
         
     if(keyboard[GLFW_KEY_DELETE].isFresh)
