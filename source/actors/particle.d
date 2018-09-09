@@ -1,12 +1,13 @@
 module lightwave.particle;
 
 import magra.base;
+import magra.renderer;
 import lightwave.resources;
 import lightwave.gravsource;
 import xypoint;
 import std.math, std.algorithm;
 
-void drawParticle(XYPoint center, float radius)
+void drawParticle(XYPoint center, float radius, RGBA color)
 {
     int vertexLength = particleQB.vao.totalAttributeLength;
     static float[] bufferData;
@@ -25,7 +26,7 @@ void drawParticle(XYPoint center, float radius)
         float y = ytab[i];
         float vx = center.x + radius * 2 * (x - .5);
         float vy = center.y + radius * 2 * (y - .5);
-        bufferData[vStart .. vStart + vertexLength] = [vx, vy, x, y, 1.0, 1.0, 1.0, 1.0];
+        bufferData[vStart .. vStart + vertexLength] = [vx, vy, x, y, color.r, color.g, color.b, color.a];
         vStart += vertexLength;
     }
 
@@ -102,14 +103,9 @@ class AParticle : Actor
 
         if(pos.mag() > 1024)
             return false;
-
-        //Draw the particle, the color is determined by the direction of movement.
-        //The saturation is determined by the speed.
-        auto val = fmin(.66 + (vel.mag / 2.5), 1.0);
-        auto sat = fmin(vel.mag / 1.0, 1.0);
         
         //particleLayer.add(new TParticle(dot, pqueue, vel.ang, sat, val, 1.0, 0.66));
-        drawParticle(pos, radius);
+        drawWithTrail();
 
         if(curGrav.mag > .03)
         {
@@ -120,6 +116,21 @@ class AParticle : Actor
         }
         
         return true;
+    }
+
+    void drawWithTrail()
+    {
+        //Color is determined by the direction of movement.
+        //The saturation is determined by the speed.
+        auto val = fmin(.66 + (vel.mag / 2.5), 1.0);
+        auto sat = fmin(vel.mag / 1.0, 1.0);
+        
+        //Draw the trail, back to front.
+        foreach(i; 0 .. pqueue.numPositions)
+        {
+            float alpha = (cast(float) (i + 1) / pqueue.numPositions);
+            drawParticle(pos, radius * (.5 + alpha / 2), RGBA.fromHSVA(vel.ang, sat, val, alpha));
+        }
     }
 }
 
