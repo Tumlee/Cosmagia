@@ -46,6 +46,7 @@ void loadResources()
     gravQB.setupShaderPair("particle");
     gravQB.program.setUniform("tex", 0);
     gravQB.addTexture(glowTX);
+    gravQB.setBlendMode(GL_ONE_MINUS_DST_COLOR, GL_ONE);
     
     glowQB = new QuadBuffer;
 
