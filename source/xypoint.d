@@ -111,6 +111,12 @@ struct XYPoint
 	        
 	    else static if(op == "-")
 	        return XYPoint(x - rhs.x, y - rhs.y);
+
+        else static if(op == "*")
+	        return XYPoint(x * rhs.x, y * rhs.y);
+	        
+	    else static if(op == "/")
+	        return XYPoint(x / rhs.x, y / rhs.y);
 	        
 	    else static assert(0, "Operator not implemented for XYPoint"); 
     }
