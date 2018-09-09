@@ -36,7 +36,7 @@ class AParticle : Actor
 {
     XYPoint pos;
     XYPoint vel;
-    //PositionQueue pqueue;
+    PositionQueue pqueue;
     float radius = 3.0;
     AGravSource hit = null;
     float deathClock = 1.0;
@@ -45,7 +45,7 @@ class AParticle : Actor
     {
         pos = p;
         vel = v;
-        //pqueue = new PositionQueue(8);
+        pqueue = new PositionQueue(8);
     }
 
     pure XYPoint gravVector(AGravSource source)
@@ -87,7 +87,7 @@ class AParticle : Actor
             vel += curGrav / gravityIterations;
             pos += vel / gravityIterations;
 
-            //pqueue.pushPosition(pos);
+            pqueue.pushPosition(pos);
 
             foreach(source; gravitySources)
             {
@@ -120,5 +120,47 @@ class AParticle : Actor
         }
         
         return true;
+    }
+}
+
+//A round-robin queue of positions a particle has been in.
+//This is used for motion-blur effects.
+class PositionQueue
+{
+    private XYPoint[] positions;
+    private ulong maxElements;
+    private ulong current;
+
+    this(uint mElements)
+    {
+        maxElements = mElements;
+    }
+
+    @property ulong numPositions()
+    {
+        return positions.length;
+    }
+
+    void pushPosition(XYPoint newPoint)
+    {
+        if(positions.length < maxElements)
+        {
+            positions ~= newPoint;
+            current = positions.length - 1;
+        }
+        else
+        {
+            current = (current + 1) % maxElements;
+            positions[current] = newPoint;
+        }
+    }
+
+    //Gets the appropriate position where x=(numPositions-1) is the current position.
+    //x should never be >= numPositions
+    XYPoint getPosition(ulong x)
+    {
+        assert(x < numPositions);
+
+        return positions[(x + current + 1) % numPositions];
     }
 }
