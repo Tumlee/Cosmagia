@@ -52,7 +52,7 @@ void loadResources()
     glowQB.addAttribute("vWorldPos", 0, 2);
     glowQB.addAttribute("vTexPos", 1, 2);
     glowQB.addAttribute("vParticleColor", 2, 4);
-    glowQB.setupShaderPair("particle");
+    glowQB.setupShaderPair("glow");
     glowQB.program.setUniform("tex", 0);
     glowQB.addTexture(glowTX);
     glowQB.setBlendMode(GL_ONE_MINUS_DST_COLOR, GL_ONE);
