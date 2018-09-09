@@ -2,9 +2,17 @@ module lightwave.camera;
 
 import xypoint;
 import lightwave.resources;
+import magra.renderer;
 
 XYPoint camOrigin;
 XYPoint camRange;
+
+void initCamera()
+{
+    camOrigin = XYPoint(0, 0);
+    camRange = XYPoint(200.0 * screenwidth / screenheight, 200.0);
+    syncCamera();
+}
 
 XYPoint worldToScreenCoordinate(XYPoint worldCoordinate)
 {
@@ -29,5 +37,17 @@ void changeZoomLevel(XYPoint screenPivot, float factor)
 
     camOrigin = newCamOrigin;
     camRange = newCamRange;
+    syncCamera();
 }
 
+//Syncs camOrigin and camRange to the GPU as uniforms.
+void syncCamera()
+{
+    //Go through each layer that pays attention to the camera and update
+    //the uniforms.
+    foreach(qbuf; [particleQB, glowQB, gravQB])
+    {
+        qbuf.program.setUniform("camRange", camRange.x, camRange.y);
+        qbuf.program.setUniform("camOrigin", camOrigin.x, camOrigin.y);
+    }
+}

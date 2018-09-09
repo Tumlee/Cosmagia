@@ -3,6 +3,7 @@ import xypoint;
 import std.conv;
 import lightwave.gravsource, lightwave.particle;
 import lightwave.resources;
+import lightwave.camera;
 import derelict.glfw3;
 
 float backgroundTime = 0.0;
@@ -66,6 +67,7 @@ void main(string[] args)
     initSettings.initializeEngine();
 
     loadResources();
+    initCamera();
     
     gameLoop.tickRate = 60.0;
     gameLoop.preTick = &myTicker;
