@@ -7,9 +7,9 @@ import lightwave.gravsource;
 import xypoint;
 import std.math, std.algorithm;
 
-void drawParticle(XYPoint center, float radius, RGBA color)
+void drawParticle(QuadBuffer qbuf, XYPoint center, float radius, RGBA color)
 {
-    int vertexLength = particleQB.vao.totalAttributeLength;
+    int vertexLength = qbuf.vao.totalAttributeLength;
     static float[] bufferData;
 
     if(bufferData.length == 0)
@@ -30,7 +30,7 @@ void drawParticle(XYPoint center, float radius, RGBA color)
         vStart += vertexLength;
     }
 
-    particleQB.addElement(bufferData);
+    qbuf.addElement(bufferData);
 }
 
 class AParticle : Actor
@@ -104,21 +104,11 @@ class AParticle : Actor
         if(pos.mag() > 1024)
             return false;
         
-        //particleLayer.add(new TParticle(dot, pqueue, vel.ang, sat, val, 1.0, 0.66));
-        drawWithTrail();
-
-        if(curGrav.mag > .03)
-        {
-            //Should scale from 0% at .2 to 100% at .4
-            auto glowAmount = sqrt(fmin((curGrav.mag - .03) / .35, 1.0));
-            
-            //glowLayer.add(new CParticle(glow, pos, vel.ang, 1.0, 1.0, glowAmount, 1.1));
-        }
-        
+        drawWithTrail(curGrav);
         return true;
     }
 
-    void drawWithTrail()
+    void drawWithTrail(XYPoint curGrav)
     {
         //Color is determined by the direction of movement.
         //The saturation is determined by the speed.
@@ -133,7 +123,14 @@ class AParticle : Actor
             if(i != pqueue.numPositions - 1)
                 alpha *= .5;
             
-            drawParticle(pqueue.getPosition(i), radius, RGBA.fromHSVA(vel.ang, sat, val, alpha));
+            drawParticle(particleQB, pqueue.getPosition(i), radius, RGBA.fromHSVA(vel.ang, sat, val, alpha));
+        }
+
+        if(curGrav.mag > .025)
+        {
+            //Should scale from 0% at .2 to 100% at .4
+            auto glowAmount = sqrt(fmin((curGrav.mag - .025) / .2, 1.0));
+            drawParticle(glowQB, pos, radius * 4, RGBA.fromHSVA(vel.ang, sat, val, glowAmount));
         }
     }
 }
