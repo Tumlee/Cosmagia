@@ -1,6 +1,7 @@
 module lightwave.camera;
 
 import xypoint;
+import std.math;
 import lightwave.resources;
 import magra.renderer;
 import magra.callbacks;
@@ -31,6 +32,9 @@ XYPoint screenToWorldCoordinate(XYPoint screenCoordinate)
 
 void changeZoomLevel(XYPoint screenPivot, float factor)
 {
+    if(isNaN(screenPivot.x) || isNaN(screenPivot.y))
+        return;
+    
     //The main idea behind changing the zoom level around a pivot point is that
     //the mouse should stay focused on the same object (or world coodinate) after the zoom takes place.
     XYPoint newCamRange = camRange * factor;
