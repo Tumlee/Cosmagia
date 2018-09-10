@@ -55,11 +55,11 @@ class AGravSource : Actor
 
         auto sat = fmin(vel.mag / 4.0, 1.0);
 
-        drawGrav(pos, fmin(sin(lifeTime * 7.0) * .1 + 1.1 + (vel.mag / 8.0), 10.0) * radius,
+        drawGrav(pos, fmin(sin(lifeTime * 7.0) * .1 + 1.1 + (vel.mag / 6.0), 10.0) * radius,
                     RGBA.fromHSVA(vel.ang, sat, 1.0, 1.0));
 
-        drawGrav(pos, fmin(sin(lifeTime * 7.0) * .1 + 1.1 + (vel.mag / 8.0), 10.0) * radius * .7,
-                    RGBA.fromHSVA(vel.ang, sat * .2, 1.0, .7));
+        drawGrav(pos, fmin(sin(lifeTime * 7.0) * .1 + 1.1 + (vel.mag / 6.0), 10.0) * radius * .7,
+                    RGBA.fromHSVA(vel.ang, sat * .2, 1.0, 1.0));
                     
         return true;
     }
