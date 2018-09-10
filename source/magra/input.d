@@ -58,8 +58,11 @@ class Mouse
 
     //Current X and Y position. dx and dy will be provided later.
     double x, y;
+    double wheelx = 0;
+    double wheely = 0;
+    double accWheelx = 0;
+    double accWheely = 0;
     //int dx, dy;
-    //int wheelx, wheely;
     
     void pressButton(int button)
     {
@@ -76,17 +79,23 @@ class Mouse
         x = xx;
         y = yy;
     }
+
+    void updateWheel(double dx, double dy)
+    {
+        accWheelx += dx;
+        accWheely += dy;
+    }
     
     void update()
     {
         //dx = accRelx;
         //dy = accRely;
-        //wheelx = accWheelx;
-        //wheely = accWheely;
+        wheelx = accWheelx;
+        wheely = accWheely;
         //accRelx = 0;
         //accRely = 0;
-        //accWheelx = 0;
-        //accWheely = 0;
+        accWheelx = 0;
+        accWheely = 0;
     
         foreach(ref state; buttons)
         {

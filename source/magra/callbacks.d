@@ -21,6 +21,7 @@ void initCallbacks(GLFWwindow* window)
     glfwSetKeyCallback(window, &keyCallback);
     glfwSetCursorPosCallback(window, &cursorPosCallback);
     glfwSetMouseButtonCallback(window, &mouseButtonCallback);
+    glfwSetScrollCallback(window, &scrollCallback);
     glfwSetWindowSizeCallback(window, &windowSizeCallback);
 }
 
@@ -78,6 +79,19 @@ extern (C) nothrow
             if(action == GLFW_RELEASE)
                 mouse.releaseButton(button);
             //mouseButtonState[button] = action;
+        }
+        catch(Exception e)
+        {
+            storedException = e;
+            return;
+        }
+    }
+
+    void scrollCallback(GLFWwindow* window, double xoffset, double yoffset)
+    {
+        try
+        {
+            mouse.updateWheel(xoffset, yoffset);
         }
         catch(Exception e)
         {
