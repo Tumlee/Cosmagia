@@ -1,6 +1,7 @@
 import magra.base;
 import xypoint;
 import std.conv;
+import std.math;
 import lightwave.gravsource, lightwave.particle;
 import lightwave.resources;
 import lightwave.camera;
@@ -40,6 +41,8 @@ void myTicker()
 
     //backLayer.add(new BGDrawer(backgroundTime));
     drawBG();
+
+    changeZoomLevel(XYPoint(mouse.x, mouse.y), pow(1.1, -mouse.wheely));
     
     if(keyboard[GLFW_KEY_ESCAPE].isFresh)
         gameLoop.quitting = true;
