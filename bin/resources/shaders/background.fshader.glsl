@@ -3,7 +3,6 @@
 uniform sampler2D tex;
 
 in vec2 fTexPos;
-in vec2 fScreenPos;
 
 out vec4 color;
 
