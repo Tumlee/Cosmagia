@@ -54,7 +54,7 @@ void syncCamera()
 {
     //Go through each layer that pays attention to the camera and update
     //the uniforms.
-    foreach(qbuf; [particleQB, glowQB, gravQB])
+    foreach(qbuf; [starQB, particleQB, glowQB, gravQB])
     {
         qbuf.program.setUniform("camRange", camRange.x, camRange.y);
         qbuf.program.setUniform("camOrigin", camOrigin.x, camOrigin.y);
