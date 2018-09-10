@@ -49,6 +49,11 @@ void changeZoomLevel(XYPoint screenPivot, float factor)
     syncCamera();
 }
 
+void panCamera(XYPoint amount)
+{
+    camOrigin += amount * camRange.y;
+}
+
 //Syncs camOrigin and camRange to the GPU as uniforms.
 void syncCamera()
 {

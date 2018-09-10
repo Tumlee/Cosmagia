@@ -43,6 +43,18 @@ void myTicker()
     drawBG();
 
     changeZoomLevel(XYPoint(mouse.x, mouse.y), pow(1.1, -mouse.wheely));
+
+    if(keyboard[GLFW_KEY_UP].isFresh)
+        panCamera(XYPoint(0, .1));
+
+    if(keyboard[GLFW_KEY_DOWN].isFresh)
+        panCamera(XYPoint(0, -.1));
+
+    if(keyboard[GLFW_KEY_LEFT].isFresh)
+        panCamera(XYPoint(-.1, 0));
+
+    if(keyboard[GLFW_KEY_RIGHT].isFresh)
+        panCamera(XYPoint(.1, 0));
     
     if(keyboard[GLFW_KEY_ESCAPE].isFresh)
         gameLoop.quitting = true;
