@@ -39,7 +39,6 @@ class AParticle : Actor
     XYPoint vel;
     PositionQueue pqueue;
     float radius = 2.5;
-    AGravSource hit = null;
     float deathClock = 1.0;
 
     this(XYPoint p, XYPoint v)
@@ -67,19 +66,6 @@ class AParticle : Actor
         enum gravityIterations = 2;
 
         XYPoint curGrav;
-
-        //If we've hit a Gravity source already, "sink" into that source
-        //and then disappear.
-        if(hit)
-        {
-            deathClock -= 1.0 / 10.0;
-            auto alpha = fmax(deathClock, 0.0);
-            
-            //particleLayer.add(new CParticle(dot, pos, 1.0, 0.0, 1.0, alpha * alpha, 0.66));
-            //glowLayer.add(new CParticle(glow, pos, 1.0, 0.0, 1.0, alpha * alpha * .5, 1.1));
-            
-            return deathClock > 0.0;
-        }
         
         foreach(i; 0 .. gravityIterations)
         {
@@ -95,8 +81,7 @@ class AParticle : Actor
                 if((pos - source.pos).mag < radius + source.radius)
                 {
                     source.vel += vel;
-                    hit = source;
-                    vel = polarCoord(1.0, (pos - source.pos).ang);
+                    return false;
                 }
             }
         }
