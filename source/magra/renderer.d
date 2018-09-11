@@ -61,7 +61,6 @@ void initGLContext(bool fullscreen, int width, int height)
 
     //Enable basic blending.
     glEnable(GL_BLEND);
-    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 }
 
 //Finds the best video mode to use for fullscreen and uses that.
