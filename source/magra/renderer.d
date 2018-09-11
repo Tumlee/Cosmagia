@@ -117,7 +117,7 @@ class QuadBuffer
         program = new ShaderProgram;
     }
 
-    void expandCapacity(ulong extra)
+    void expandCapacity(size_t extra)
     {        
         auto oldEboLength = eboData.length;
         
