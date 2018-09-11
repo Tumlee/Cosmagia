@@ -5,6 +5,7 @@ import std.math;
 import lightwave.gravsource, lightwave.particle;
 import lightwave.resources;
 import lightwave.camera;
+import lightwave.clutil;
 import derelict.glfw3;
 
 float backgroundTime = 0.0;
@@ -79,6 +80,8 @@ void myTicker()
 
 void main(string[] args)
 {
+    //Before anything, initialize OpenCL
+    initCL();
     auto initSettings = new InitSettings;
     
     initSettings.windowTitle = "LightWave";
