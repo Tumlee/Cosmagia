@@ -56,8 +56,8 @@ void initGLContext(bool fullscreen, int width, int height)
     iluInit();
 
     //Enable debugging output for OpenGL
-    glEnable(GL_DEBUG_OUTPUT);
-    glDebugMessageCallback(&errorCallback, null);
+    debug glEnable(GL_DEBUG_OUTPUT);
+    debug glDebugMessageCallback(&errorCallback, null);
 
     //Enable basic blending.
     glEnable(GL_BLEND);
