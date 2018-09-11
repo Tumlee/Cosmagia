@@ -5,17 +5,17 @@ import magra.renderer;
 import xypoint;
 import std.array, std.math;
 
-void drawGrav(XYPoint center, float radius, RGBA color)
+void drawGrav(XYPoint center, float radius, XYPoint vel, float alpha)
 {
     float wx0 = center.x - radius * 1.5;
     float wy0 = center.y - radius * 1.5;
     float wx1 = center.x + radius * 1.5;
     float wy1 = center.y + radius * 1.5;
 
-    gravQB.addElement([ wx0, wy0, 0, 0, color.r, color.g, color.b, color.a,
-                        wx1, wy0, 1, 0, color.r, color.g, color.b, color.a,
-                        wx1, wy1, 1, 1, color.r, color.g, color.b, color.a,
-                        wx0, wy1, 0, 1, color.r, color.g, color.b, color.a]);
+    gravQB.addElement([ wx0, wy0, 0, 0, vel.x, vel.y, alpha,
+                        wx1, wy0, 1, 0, vel.x, vel.y, alpha,
+                        wx1, wy1, 1, 1, vel.x, vel.y, alpha,
+                        wx0, wy1, 0, 1, vel.x, vel.y, alpha]);
 }
 
 class AGravSource : Actor
@@ -37,16 +37,10 @@ class AGravSource : Actor
     override bool tick()
     {
         lifeTime += 1.0 / 60.0;
-
         vel *= .92;
-
-        auto sat = fmin(vel.mag / 4.0, 1.0);
-
-        drawGrav(pos, fmin(sin(lifeTime * 7.0) * .1 + 1.1 + (vel.mag / 6.0), 10.0) * radius,
-                    RGBA.fromHSVA(vel.ang, sat, 1.0, 1.0));
-
-        drawGrav(pos, fmin(sin(lifeTime * 7.0) * .1 + 1.1 + (vel.mag / 6.0), 10.0) * radius * .7,
-                    RGBA.fromHSVA(vel.ang, sat * .2, 1.0, 1.0));
+        
+        drawGrav(pos, fmin(sin(lifeTime * 7.0) * .1 + 1.1 + (vel.mag / 6.0), 10.0) * radius, vel * .3, 1);
+        drawGrav(pos, fmin(sin(lifeTime * 7.0) * .1 + 1.1 + (vel.mag / 6.0), 10.0) * radius * .6, XYPoint(0,0), .9);
                     
         return true;
     }

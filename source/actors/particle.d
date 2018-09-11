@@ -7,17 +7,17 @@ import lightwave.gravsource;
 import xypoint;
 import std.math, std.algorithm;
 
-void drawParticle(QuadBuffer qbuf, XYPoint center, float radius, RGBA color)
+void drawParticle(QuadBuffer qbuf, XYPoint center, float radius, XYPoint vel, float alpha)
 {
     float wx0 = center.x - radius;
     float wy0 = center.y - radius;
     float wx1 = center.x + radius;
     float wy1 = center.y + radius;
 
-    qbuf.addElement([   wx0, wy0, 0, 0, color.r, color.g, color.b, color.a,
-                        wx1, wy0, 1, 0, color.r, color.g, color.b, color.a,
-                        wx1, wy1, 1, 1, color.r, color.g, color.b, color.a,
-                        wx0, wy1, 0, 1, color.r, color.g, color.b, color.a]);
+    qbuf.addElement([   wx0, wy0, 0, 0, vel.x, vel.y, alpha,
+                        wx1, wy0, 1, 0, vel.x, vel.y, alpha,
+                        wx1, wy1, 1, 1, vel.x, vel.y, alpha,
+                        wx0, wy1, 0, 1, vel.x, vel.y, alpha]);
 }
 
 class AParticle : Actor
@@ -81,12 +81,7 @@ class AParticle : Actor
     }
 
     void drawWithTrail(XYPoint curGrav)
-    {
-        //Color is determined by the direction of movement.
-        //The saturation is determined by the speed.
-        auto val = fmin(.66 + (vel.mag / 2.5), 1.0);
-        auto sat = fmin(vel.mag / 1.0, 1.0);
-        
+    {        
         //Draw the trail, back to front.
         foreach(i; 0 .. pqueue.numPositions)
         {
@@ -95,14 +90,14 @@ class AParticle : Actor
             if(i != pqueue.numPositions - 1)
                 alpha *= .5;
             
-            drawParticle(particleQB, pqueue.getPosition(i), radius, RGBA.fromHSVA(vel.ang, sat, val, alpha));
+            drawParticle(particleQB, pqueue.getPosition(i), radius, vel, alpha);
         }
 
         if(curGrav.mag > .025)
         {
             //Should scale from 0% at .2 to 100% at .4
             auto glowAmount = sqrt(fmin((curGrav.mag - .025) / .2, 1.0));
-            drawParticle(glowQB, pos, radius * 4, RGBA.fromHSVA(vel.ang, sat, val, glowAmount));
+            drawParticle(glowQB, pos, radius * 4, vel, glowAmount);
         }
     }
 }
