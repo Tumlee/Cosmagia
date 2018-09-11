@@ -9,28 +9,15 @@ import std.math, std.algorithm;
 
 void drawParticle(QuadBuffer qbuf, XYPoint center, float radius, RGBA color)
 {
-    int vertexLength = qbuf.vao.totalAttributeLength;
-    static float[] bufferData;
+    float wx0 = center.x - radius;
+    float wy0 = center.y - radius;
+    float wx1 = center.x + radius;
+    float wy1 = center.y + radius;
 
-    if(bufferData.length == 0)
-        bufferData.length = vertexLength * 4;
-
-    size_t vStart = 0;
-
-    enum float[] xtab = [0, 1, 1, 0];
-    enum float[] ytab = [1, 1, 0, 0];
-    
-    foreach(int i; 0 .. 4)
-    {
-        float x = xtab[i];
-        float y = ytab[i];
-        float vx = center.x + radius * 2 * (x - .5);
-        float vy = center.y + radius * 2 * (y - .5);
-        bufferData[vStart .. vStart + vertexLength] = [vx, vy, x, y, color.r, color.g, color.b, color.a];
-        vStart += vertexLength;
-    }
-
-    qbuf.addElement(bufferData);
+    qbuf.addElement([   wx0, wy0, 0, 0, color.r, color.g, color.b, color.a,
+                        wx1, wy0, 1, 0, color.r, color.g, color.b, color.a,
+                        wx1, wy1, 1, 1, color.r, color.g, color.b, color.a,
+                        wx0, wy1, 0, 1, color.r, color.g, color.b, color.a]);
 }
 
 class AParticle : Actor
