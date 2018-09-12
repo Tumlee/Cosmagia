@@ -6,6 +6,7 @@ import lightwave.gravsource, lightwave.particle;
 import lightwave.resources;
 import lightwave.camera;
 import lightwave.clutil;
+import lightwave.devicedata;
 import derelict.glfw3;
 
 float backgroundTime = 0.0;
@@ -82,6 +83,8 @@ void main(string[] args)
 {
     //Before anything, initialize OpenCL
     initCL();
+    initDeviceData();
+    
     auto initSettings = new InitSettings;
     
     initSettings.windowTitle = "LightWave";
