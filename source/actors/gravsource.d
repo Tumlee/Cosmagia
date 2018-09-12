@@ -1,6 +1,7 @@
 module lightwave.gravsource;
 import magra.base;
 import lightwave.resources;
+import lightwave.devicedata;
 import magra.renderer;
 import xypoint;
 import std.array, std.math;
@@ -53,4 +54,5 @@ AGravSource[] gravitySources;
 void updateGravitySources()
 {
     gravitySources = actors.actorsOf!AGravSource.array;
+    syncGravitySources();
 }

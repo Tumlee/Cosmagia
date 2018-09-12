@@ -6,6 +6,7 @@ module lightwave.devicedata;
 import magra.globals;
 import lightwave.clutil;
 import lightwave.particle;
+import lightwave.gravsource;
 
 struct ParticleData
 {
@@ -16,13 +17,28 @@ struct ParticleData
     float radius;
 }
 
+struct GravityData
+{
+    float posx;
+    float posy;
+    float mass;
+    float radius;
+}
+
 //Particle data arrays for the host and device.
 private ParticleData[] hostPData;
 private CLMemory!ParticleData devicePData;
 
+//Gravity data arrays or the host and device.
+//Unlike with particle sources, this is only ever called
+//when gravity sources are added, deleted, moved, or changed.
+private GravityData[] hostGData;
+private CLMemory!GravityData deviceGData;
+
 void initDeviceData()
 {
     devicePData = new CLMemory!ParticleData;
+    deviceGData = new CLMemory!GravityData;
 }
 
 void syncParticles()
@@ -59,4 +75,31 @@ void syncParticles()
 
     //Send it to the GPU.
     devicePData.write(hostPData[0 .. slot]);
+}
+
+void syncGravitySources()
+{
+    size_t slot = 0;
+
+    foreach(source; gravitySources)
+    {
+        if(slot == hostGData.length)
+        {
+            if(hostGData.length == 0)
+                hostGData.length = 64;
+
+            hostGData.length = hostGData.length * 2;
+        }
+
+        hostGData[slot].posx = source.pos.x;
+        hostGData[slot].posy = source.pos.y;
+        hostGData[slot].mass = source.mass;
+        hostGData[slot].radius = source.radius;
+        slot++;
+    }
+
+    if(deviceGData.length < hostGData.length)
+        deviceGData.allocate(hostGData.length);
+
+    deviceGData.write(hostGData[0 .. slot]);
 }
