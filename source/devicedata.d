@@ -65,6 +65,7 @@ void syncParticles()
         hostPData[slot].velx = particle.vel.x;
         hostPData[slot].vely = particle.vel.y;
         hostPData[slot].radius = particle.radius;
+        particle.dataSlot = slot;
         slot++;
     }
 
@@ -95,6 +96,7 @@ void syncGravitySources()
         hostGData[slot].posy = source.pos.y;
         hostGData[slot].mass = source.mass;
         hostGData[slot].radius = source.radius;
+        source.dataSlot = slot;
         slot++;
     }
 

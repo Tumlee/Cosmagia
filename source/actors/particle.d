@@ -27,6 +27,7 @@ class AParticle : Actor
     PositionQueue pqueue;
     float radius = 2.5;
     float deathClock = 1.0;
+    size_t dataSlot;
 
     this(XYPoint p, XYPoint v)
     {

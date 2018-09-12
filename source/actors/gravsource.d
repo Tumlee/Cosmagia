@@ -26,6 +26,7 @@ class AGravSource : Actor
     float mass;
     float radius = 7.0;
     float lifeTime = 0.0;
+    size_t dataSlot;
     
     this(float x, float y)
     {
