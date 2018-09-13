@@ -5,6 +5,8 @@ import std.path;
 import std.file;
 import std.exception;
 import std.array;
+import std.string;
+import core.stdc.stdlib;
 
 private enum string appName = "lightwave";
 
@@ -40,7 +42,7 @@ string getConfigPath()
         return expandTilde("~/.config/" ~ appName);
         
     else version(Windows)
-        return getenv("APPDATA").fromStringz.dup ~ "/" ~ appName;
+        return getenv("APPDATA").fromStringz.idup ~ "/" ~ appName;
         
     else version(OSX)
         return expandTilde("~/Library/Application Support/" ~ appName);
