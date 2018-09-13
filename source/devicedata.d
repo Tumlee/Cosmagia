@@ -49,11 +49,15 @@ enum uint numMovesteps = 2;
 private GravityData[] hostGData;
 private CLMemory!GravityData deviceGData;
 
+private CLKernel gravityKernel;
+
 void initDeviceData()
 {
     devicePData = new CLMemory!ParticleData;
     deviceGData = new CLMemory!GravityData;
     deviceMData = new CLMemory!ParticleMovestep;
+
+    gravityKernel = new CLKernel("gravity", "moveParticles");
 }
 
 void syncParticles()
@@ -95,6 +99,16 @@ void syncParticles()
 
     //Send it to the GPU.
     devicePData.write(hostPData[0 .. slot]);
+
+    //Run the kernel. To avoid situations where we end up with a very
+    //small groupsize, we pad the data to the nearest 256, rounding up.
+    //OPTIMIZE: Instead of 256, use information from the GPU for the
+    //best chunksize.
+    gravityKernel.setArgs(devicePData, deviceGData, cast(uint) gravitySources.length, deviceMData, numMovesteps);
+    gravityKernel.enqueue([slot + (slot % 256)]);
+    
+    //Read movement data back to the CPU.
+    deviceMData.read(hostMData[0 .. slot * numMovesteps]);
 }
 
 void syncGravitySources()
