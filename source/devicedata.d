@@ -111,6 +111,11 @@ void syncParticles()
     deviceMData.read(hostMData[0 .. slot * numMovesteps]);
 }
 
+ref const(ParticleMovestep) getMovestep(const AParticle particle, size_t step)
+{
+    return hostMData[particle.dataSlot * numMovesteps + step];
+}
+
 void syncGravitySources()
 {
     size_t slot = 0;

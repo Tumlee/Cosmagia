@@ -4,6 +4,7 @@ import magra.base;
 import magra.renderer;
 import lightwave.resources;
 import lightwave.gravsource;
+import lightwave.devicedata;
 import xypoint;
 import std.math, std.algorithm;
 
@@ -36,48 +37,30 @@ class AParticle : Actor
         pqueue = new PositionQueue(6);
     }
 
-    pure XYPoint gravVector(AGravSource source)
-    {
-        auto r = source.pos - pos;
-        return polarCoord(source.mass / (r.mag * r.mag), r.ang);
-    }
-    
-    XYPoint currentGravity()
-    {
-        return gravitySources
-                .map!(source => gravVector(source))
-                .sum(XYPoint(0,0));
-    }
-
     override bool tick()
     {
-        enum gravityIterations = 2;
-
-        XYPoint curGrav;
-        
-        foreach(i; 0 .. gravityIterations)
+        //Ticking always happens after gravitational calculations.
+        //Our only job is to check the output and set position accordingly.
+        auto oldVel = vel;
+        foreach(size_t s; 0 .. numMovesteps)
         {
-            curGrav = currentGravity();
-            
-            vel += curGrav / gravityIterations;
-            pos += vel / gravityIterations;
+            auto step = getMovestep(this, s);
+            pos = XYPoint(step.posx, step.posy);
+            vel = XYPoint(step.velx, step.vely);
 
-            pqueue.pushPosition(pos);
-
-            foreach(source; gravitySources)
+            if(step.collision != -1)
             {
-                if((pos - source.pos).mag < radius + source.radius)
-                {
-                    source.vel += vel;
-                    return false;
-                }
+                gravitySources[step.collision].vel += vel;
+                return false;
             }
+            
+            pqueue.pushPosition(pos);
         }
 
         if(pos.mag() > 1024)
             return false;
         
-        drawWithTrail(curGrav);
+        drawWithTrail(vel - oldVel);
         return true;
     }
 

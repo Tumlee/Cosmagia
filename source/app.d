@@ -77,6 +77,8 @@ void myTicker()
         actors.clear!()();
         updateGravitySources();
     }
+
+    syncParticles();
 }
 
 void main(string[] args)
