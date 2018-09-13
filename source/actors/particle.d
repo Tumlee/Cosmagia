@@ -91,15 +91,15 @@ class AParticle : Actor
 class PositionQueue
 {
     private XYPoint[] positions;
-    private ulong maxElements;
-    private ulong current;
+    private size_t maxElements;
+    private size_t current;
 
     this(uint mElements)
     {
         maxElements = mElements;
     }
 
-    @property ulong numPositions()
+    @property size_t numPositions()
     {
         return positions.length;
     }
