@@ -9,6 +9,8 @@ import std.path;
 import std.file;
 import std.array;
 
+import magra.resource;
+
 //This library assumes a single context, queue, and device.
 //This may change later but it seems unlikely given the headaches it would cause.
 private cl_context context;
@@ -425,7 +427,7 @@ void buildProgram(string programName)
         return;
         
     //FIXME: Limit allowed characters in programName? 
-    string filename = chainPath(thisExePath.dirName, "clprograms", programName ~ ".cl").array;
+    string filename = chainPath(getResourcesPath(), "clprograms", programName ~ ".cl").array;
 
     int errorCode;
     
