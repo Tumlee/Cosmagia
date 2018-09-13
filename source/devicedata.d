@@ -73,6 +73,7 @@ void syncParticles()
                 hostPData.length = 256;
                 
             hostPData.length = hostPData.length * 2;
+            hostMData.length = hostPData.length * numMovesteps;
         }
 
         hostPData[slot].posx = particle.pos.x;
@@ -88,6 +89,9 @@ void syncParticles()
     //all of the incoming elements.
     if(devicePData.length < hostPData.length)
         devicePData.allocate(hostPData.length);
+
+    if(deviceMData.length < hostMData.length)
+        deviceMData.allocate(hostMData.length);
 
     //Send it to the GPU.
     devicePData.write(hostPData[0 .. slot]);
@@ -105,7 +109,6 @@ void syncGravitySources()
                 hostGData.length = 64;
 
             hostGData.length = hostGData.length * 2;
-            hostMData.length = hostGData.length * numMovesteps;
         }
 
         hostGData[slot].posx = source.pos.x;
@@ -118,9 +121,6 @@ void syncGravitySources()
 
     if(deviceGData.length < hostGData.length)
         deviceGData.allocate(hostGData.length);
-        
-    if(deviceMData.length < hostMData.length)
-        deviceMData.allocate(hostMData.length);
 
     deviceGData.write(hostGData[0 .. slot]);
 }
