@@ -17,6 +17,15 @@ struct ParticleData
     float radius;
 }
 
+struct ParticleMovestep
+{
+    float posx;
+    float posy;
+    float velx;
+    float vely;
+    uint collision;
+}
+
 struct GravityData
 {
     float posx;
@@ -29,6 +38,11 @@ struct GravityData
 private ParticleData[] hostPData;
 private CLMemory!ParticleData devicePData;
 
+//Particle movestep data, used as an output.
+private ParticleMovestep[] hostMData;
+private CLMemory!ParticleMovestep deviceMData;
+enum uint numMovesteps = 2;
+
 //Gravity data arrays or the host and device.
 //Unlike with particle sources, this is only ever called
 //when gravity sources are added, deleted, moved, or changed.
@@ -39,6 +53,7 @@ void initDeviceData()
 {
     devicePData = new CLMemory!ParticleData;
     deviceGData = new CLMemory!GravityData;
+    deviceMData = new CLMemory!ParticleMovestep;
 }
 
 void syncParticles()
@@ -90,6 +105,7 @@ void syncGravitySources()
                 hostGData.length = 64;
 
             hostGData.length = hostGData.length * 2;
+            hostMData.length = hostGData.length * numMovesteps;
         }
 
         hostGData[slot].posx = source.pos.x;
@@ -102,6 +118,9 @@ void syncGravitySources()
 
     if(deviceGData.length < hostGData.length)
         deviceGData.allocate(hostGData.length);
+        
+    if(deviceMData.length < hostMData.length)
+        deviceMData.allocate(hostMData.length);
 
     deviceGData.write(hostGData[0 .. slot]);
 }
