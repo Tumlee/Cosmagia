@@ -1,4 +1,4 @@
-#version 420 core
+#version 400 core
 
 in vec2 vWorldPos;
 in vec2 vTexPos;
