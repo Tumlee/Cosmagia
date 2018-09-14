@@ -59,8 +59,10 @@ class AParticle : Actor
 
         if(pos.mag() > 1024)
             return false;
-        
-        drawWithTrail(vel - oldVel);
+
+        if(gameLoop.renderingIsEnabled())
+            drawWithTrail(vel - oldVel);
+            
         return true;
     }
 

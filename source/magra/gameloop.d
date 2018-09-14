@@ -9,6 +9,9 @@ import magra.renderer;
 class GameLoop
 {
     bool quitting = false;
+
+    //Whether or not rendering is enabled this frame.
+    private bool renderingEnabled = true;
     
     float tickRate = 30.0;
     void function() preTick = null;
@@ -29,6 +32,11 @@ class GameLoop
             
             //Process any events caught by GLFW
             glfwPollEvents();
+
+            //If we've already missed the frame deadline before the game logic
+            //runs, disable rendering so we can try and catch up.
+            if(gameTick != 1 && currentTimeMS() > goalTime)
+                renderingEnabled = false;
             
             //Run the game logic
             if(preTick !is null)
@@ -40,7 +48,7 @@ class GameLoop
                 postTick();
                 
             //Render the game scene, if we're not behind.
-            if(goalTime > currentTimeMS())
+            if(goalTime > currentTimeMS() && renderingEnabled)
                 renderingQueue.drawLayers();
                 
             renderingQueue.clearLayers();
@@ -55,7 +63,14 @@ class GameLoop
                 //Flip the display.
                 glfwSwapBuffers(window);
             }
+
+            renderingEnabled = true;
         }
+    }
+
+    bool renderingIsEnabled()
+    {
+        return renderingEnabled;
     }
 }
 
