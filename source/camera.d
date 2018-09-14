@@ -32,12 +32,28 @@ XYPoint screenToWorldCoordinate(XYPoint screenCoordinate)
 
 void changeZoomLevel(XYPoint screenPivot, float factor)
 {
+    enum float maxCamRange = 4096.0;
+    enum float minCamRange = 16.0;
+    
     if(isNaN(screenPivot.x) || isNaN(screenPivot.y))
         return;
     
     //The main idea behind changing the zoom level around a pivot point is that
     //the mouse should stay focused on the same object (or world coodinate) after the zoom takes place.
     XYPoint newCamRange = camRange * factor;
+
+    //Ensure the camera range stays between maxCamRange and minCamRange
+    if(newCamRange.x > maxCamRange)
+        newCamRange *= maxCamRange / newCamRange.x;
+
+    if(newCamRange.y > maxCamRange)
+        newCamRange *= maxCamRange / newCamRange.y;
+
+    if(newCamRange.x < minCamRange)
+        newCamRange *= minCamRange / newCamRange.x;
+
+    if(newCamRange.y < minCamRange)
+        newCamRange *= minCamRange / newCamRange.y;
 
     //Both the new and old values for screenPivot should map to the same worldCoodinate.
     //For this, we have to find a new camera origin such that:
@@ -46,6 +62,11 @@ void changeZoomLevel(XYPoint screenPivot, float factor)
 
     camOrigin = newCamOrigin;
     camRange = newCamRange;
+
+    //Ensure that the camera does not escape the play boundary.
+    if(camOrigin.mag > 1024.0)
+        camOrigin.reDistance(1024.0);
+    
     syncCamera();
 }
 
