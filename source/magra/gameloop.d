@@ -38,14 +38,7 @@ class GameLoop
             if(gameTick != 1 && currentTimeMS() > goalTime)
                 renderingEnabled = false;
             
-            //Run the game logic
-            if(preTick !is null)
-                preTick();
-                
-            actors.tick();
-                
-            if(postTick !is null)
-                postTick();
+            runGameTick();
                 
             //Render the game scene, if we're not behind.
             if(goalTime > currentTimeMS() && renderingEnabled)
@@ -66,6 +59,17 @@ class GameLoop
 
             renderingEnabled = true;
         }
+    }
+
+    void runGameTick()
+    {
+        if(preTick !is null)
+            preTick();
+                
+        actors.tick();
+                
+        if(postTick !is null)
+            postTick();
     }
 
     bool renderingIsEnabled()
