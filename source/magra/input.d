@@ -57,7 +57,7 @@ class Mouse
     KeyState[int] buttons;
 
     //Current X and Y position. dx and dy will be provided later.
-    double x, y;
+    double x = 0, y = 0;
     double wheelx = 0;
     double wheely = 0;
     double accWheelx = 0;
