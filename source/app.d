@@ -2,11 +2,11 @@ import magra.base;
 import xypoint;
 import std.conv;
 import std.math;
-import lightwave.gravsource, lightwave.particle;
-import lightwave.resources;
-import lightwave.camera;
-import lightwave.clutil;
-import lightwave.devicedata;
+import cosmagia.actors.gravsource, cosmagia.actors.particle;
+import cosmagia.resources;
+import cosmagia.camera;
+import cosmagia.clutil;
+import cosmagia.devicedata;
 import derelict.glfw3;
 
 float backgroundTime = 0.0;
@@ -89,7 +89,7 @@ void main(string[] args)
     
     auto initSettings = new InitSettings;
     
-    initSettings.windowTitle = "LightWave";
+    initSettings.windowTitle = "Cosmagia";
     initSettings.screenWidth = 1366;
     initSettings.screenHeight = 768;
     initSettings.fullscreen = true;

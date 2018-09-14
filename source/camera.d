@@ -1,8 +1,8 @@
-module lightwave.camera;
+module cosmagia.camera;
 
 import xypoint;
 import std.math;
-import lightwave.resources;
+import cosmagia.resources;
 import magra.renderer;
 import magra.callbacks;
 

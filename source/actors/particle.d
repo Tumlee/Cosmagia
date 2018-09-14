@@ -1,10 +1,10 @@
-module lightwave.particle;
+module cosmagia.actors.particle;
 
 import magra.base;
 import magra.renderer;
-import lightwave.resources;
-import lightwave.gravsource;
-import lightwave.devicedata;
+import cosmagia.resources;
+import cosmagia.actors.gravsource;
+import cosmagia.devicedata;
 import xypoint;
 import std.math, std.algorithm;
 

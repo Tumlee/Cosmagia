@@ -1,6 +1,6 @@
 .dub/
 dub.selections.json
 
-bin/lightwave
-bin/lightwave.exe
+bin/cosmagia
+bin/cosmagia.exe
 bin/*.dll

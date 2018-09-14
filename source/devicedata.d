@@ -1,12 +1,12 @@
 //This module handles transfering data from the host (CPU) to the device (GPU) as
 //well as setting up and executing kernels that handle gravitational calculations
 //for all of the particles.
-module lightwave.devicedata;
+module cosmagia.devicedata;
 
 import magra.globals;
-import lightwave.clutil;
-import lightwave.particle;
-import lightwave.gravsource;
+import cosmagia.clutil;
+import cosmagia.actors.particle;
+import cosmagia.actors.gravsource;
 
 struct ParticleData
 {

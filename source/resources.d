@@ -1,10 +1,10 @@
-module lightwave.resources;
+module cosmagia.resources;
 
 import magra.base;
 import magra.renderer;
 import magra.glutil;
 
-import lightwave.camera;
+import cosmagia.camera;
 import xypoint;
 
 QuadBuffer starQB, particleQB, gravQB, glowQB;

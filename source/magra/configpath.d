@@ -8,7 +8,7 @@ import std.array;
 import std.string;
 import core.stdc.stdlib;
 
-private enum string appName = "lightwave";
+private enum string appName = "cosmagia";
 
 //Ensure that the configuration directory exists, and that the mandatory
 //files exist. If they don't, copy them from the bin/defaultconfig folder.

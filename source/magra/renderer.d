@@ -80,7 +80,7 @@ void setFullscreenVideoMode()
 
     screenwidth = bestMode.width;
     screenheight = bestMode.height;
-    window = glfwCreateWindow(screenwidth, screenheight, "Lightwave", glfwGetPrimaryMonitor(), null);    
+    window = glfwCreateWindow(screenwidth, screenheight, "Cosmagia", glfwGetPrimaryMonitor(), null);    
 }
 
 void setWindowedVideoMode(int w, int h)
@@ -88,7 +88,7 @@ void setWindowedVideoMode(int w, int h)
     screenwidth = w;
     screenheight = h;
 
-    window = glfwCreateWindow(screenwidth, screenheight, "Lightwave", null, null);
+    window = glfwCreateWindow(screenwidth, screenheight, "Cosmagia", null, null);
 }
 
 class QuadBuffer

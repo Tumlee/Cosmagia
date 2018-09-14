@@ -1,7 +1,7 @@
-module lightwave.gravsource;
+module cosmagia.actors.gravsource;
 import magra.base;
-import lightwave.resources;
-import lightwave.devicedata;
+import cosmagia.resources;
+import cosmagia.devicedata;
 import magra.renderer;
 import xypoint;
 import std.array, std.math;

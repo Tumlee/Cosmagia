@@ -1,4 +1,4 @@
-module lightwave.clutil;
+module cosmagia.clutil;
 
 public import derelict.opencl.cl;
 import std.stdio;
