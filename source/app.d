@@ -50,6 +50,18 @@ void myTicker()
         updateGravitySources();
     }
 
+    if(mouse[GLFW_MOUSE_BUTTON_RIGHT].isFresh)
+    {
+        for(float r = 0; r < 3.141 * 2; r += .01)
+        {
+            import std.math;
+            float x = cos(r);
+            float y = sin(r);
+            auto worldCoordinate = screenToWorldCoordinate(XYPoint(mouse.x, mouse.y));
+            actors.spawn(new AParticle(worldCoordinate, XYPoint(-y,x) * .66));
+        }
+    }
+
     if(keyboard[GLFW_KEY_R].isDown)
     {
         import std.random;
@@ -57,19 +69,6 @@ void myTicker()
         auto rvel = XYPoint(uniform(-4, 4), uniform(-4, 4));
 
         actors.spawn(new AParticle(rpos, rvel));
-    }
-
-    if(keyboard[GLFW_KEY_W].isFresh)
-    {
-        import std.random;
-
-        for(float r = 0; r < 3.141 * 2; r += .01)
-        {
-            import std.math;
-            float x = cos(r);
-            float y = sin(r);
-            actors.spawn(new AParticle(XYPoint(x, y) * 256, XYPoint(0,0)));
-        }
     }
         
     if(keyboard[GLFW_KEY_DELETE].isFresh)
