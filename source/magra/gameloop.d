@@ -41,7 +41,7 @@ class GameLoop
             runGameTick();
                 
             //Render the game scene, if we're not behind.
-            if(goalTime > currentTimeMS() && renderingEnabled)
+            if(renderingEnabled)
                 renderingQueue.drawLayers();
                 
             renderingQueue.clearLayers();
@@ -50,12 +50,11 @@ class GameLoop
             auto timeToWait = goalTime - currentTimeMS();
             
             if(timeToWait > 0)
-            {
                 delayMS(cast(long) timeToWait);
                 
-                //Flip the display.
+            //Flip the display.
+            if(renderingEnabled)
                 glfwSwapBuffers(window);
-            }
 
             renderingEnabled = true;
         }
