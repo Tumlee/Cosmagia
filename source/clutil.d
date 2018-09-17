@@ -199,7 +199,7 @@ class CLMemory(T)
         free();
     
         int errorCode;
-        memory = clCreateBuffer(context, flags, newElements * T.sizeof * 2, null, &errorCode);
+        memory = clCreateBuffer(context, flags, newElements * T.sizeof, null, &errorCode);
         checkErrorCode("clCreateBuffer", errorCode);
             
         numElements = newElements;
