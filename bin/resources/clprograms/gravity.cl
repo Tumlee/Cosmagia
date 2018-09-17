@@ -24,14 +24,14 @@ typedef struct
     float radius;
 } GravityData;
 
-kernel void moveParticles(  constant ParticleData* particles,
-                            constant GravityData* gravitySources,
+kernel void moveParticles(  global ParticleData* particles,
+                            global GravityData* gravitySources,
                             uint numGravitySources,
                             global ParticleMovestep* movesteps,
                             uint numSteps)
 {
     uint pindex = get_global_id(0);
-    constant ParticleData* particle = &particles[pindex];
+    global ParticleData* particle = &particles[pindex];
     float posx = particle->posx;
     float posy = particle->posy;
     float velx = particle->velx;
@@ -45,7 +45,7 @@ kernel void moveParticles(  constant ParticleData* particles,
         
         for(int g = 0; g < numGravitySources; g++)
         {
-            constant GravityData* source = &gravitySources[g];
+            global GravityData* source = &gravitySources[g];
 
             //Calculate gravitational pull and distance.
             //Note that to avoid a sqrt() operation, we divide by dsquared, since
