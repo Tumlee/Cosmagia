@@ -144,6 +144,11 @@ T[] getCLDeviceInfo(T)(cl_device_id deviceID, cl_device_info paramName)
     return parameter;
 }
 
+T[] getChosenCLDeviceInfo(T)(cl_device_info paramName)
+{
+    return getCLDeviceInfo!(T)(chosenDevice, paramName);
+}
+
 T[] getCLPlatformInfo(T)(cl_platform_id platformID, cl_platform_info paramName)
 {
     int errorCode;

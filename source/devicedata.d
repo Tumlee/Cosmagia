@@ -54,10 +54,16 @@ private CLMemory!GravityData deviceGData;
 
 private CLKernel gravityKernel;
 
+//Equal to CL_DEVICE_MAX_WORK_GROUP_SIZE so that we are always using
+//the maximum number of work items per work group.
+private size_t particleChunkSize;
+
 void initDeviceData()
 {
     if(cpuFallbackMode)
         return;
+
+    particleChunkSize = getChosenCLDeviceInfo!size_t(CL_DEVICE_MAX_WORK_GROUP_SIZE)[0];
     
     devicePData = new CLMemory!ParticleData;
     deviceGData = new CLMemory!GravityData;
@@ -84,7 +90,7 @@ void syncParticles()
         {
             if(hostPData.length == 0)
             {
-                hostPData.length = 256;
+                hostPData.length = particleChunkSize;
             }
             else
             {
@@ -116,10 +122,8 @@ void syncParticles()
 
     //Run the kernel. To avoid situations where we end up with a very
     //small groupsize, we pad the data to the nearest 256, rounding up.
-    //OPTIMIZE: Instead of 256, use information from the GPU for the
-    //best chunksize.
     gravityKernel.setArgs(devicePData, deviceGData, cast(uint) gravitySources.length, deviceMData, numMovesteps);
-    gravityKernel.enqueue([slot.roundUpToNearest(256)]);
+    gravityKernel.enqueue([slot.roundUpToNearest(particleChunkSize)]);
     
     //Read movement data back to the CPU.
     deviceMData.read(hostMData[0 .. slot * numMovesteps]);
