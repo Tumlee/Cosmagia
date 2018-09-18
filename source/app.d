@@ -1,7 +1,10 @@
 import magra.base;
 import xypoint;
+import std.stdio;
 import std.conv;
 import std.math;
+import std.exception;
+import std.algorithm;
 import cosmagia.actors.gravsource, cosmagia.actors.particle;
 import cosmagia.resources;
 import cosmagia.camera;
@@ -82,8 +85,21 @@ void myTicker()
 
 void main(string[] args)
 {
-    //Before anything, initialize OpenCL
-    initCL();
+    //Before anything, initialize OpenCL. If it is not available
+    //for whatever reason, or if we use the --cpugravity switch,
+    //we go into a CPU fallback mode.
+    if(args.canFind("--cpugravity"))
+    {
+        cpuFallbackMode = true;
+    }
+    else if(Exception e = collectException(initCL()))
+    {
+        writeln("Warning! OpenCL is not available on this system, reason:");
+        writeln(e.msg);
+        writeln("Gravitational calculations will be done by the CPU. Performance may be degraded.");
+        cpuFallbackMode = true;
+    }
+
     initDeviceData();
     
     auto initSettings = new InitSettings;

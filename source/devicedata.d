@@ -43,6 +43,9 @@ private ParticleMovestep[] hostMData;
 private CLMemory!ParticleMovestep deviceMData;
 enum uint numMovesteps = 2;
 
+//If true, we do not call and OpenCL functions and use the CPU to calculate everything.
+bool cpuFallbackMode = false;
+
 //Gravity data arrays or the host and device.
 //Unlike with particle sources, this is only ever called
 //when gravity sources are added, deleted, moved, or changed.
@@ -53,6 +56,9 @@ private CLKernel gravityKernel;
 
 void initDeviceData()
 {
+    if(cpuFallbackMode)
+        return;
+    
     devicePData = new CLMemory!ParticleData;
     deviceGData = new CLMemory!GravityData;
     deviceMData = new CLMemory!ParticleMovestep;
@@ -62,6 +68,9 @@ void initDeviceData()
 
 void syncParticles()
 {
+    if(cpuFallbackMode)
+        return;
+    
     //OPTIMIZE: This does not seem to be causing any performance issues for now,
     //but we should try to avoid using actorsOf here if possible.
     auto particles = actors.actorsOf!(AParticle)();
@@ -118,6 +127,9 @@ ref const(ParticleMovestep) getMovestep(const AParticle particle, size_t step)
 
 void syncGravitySources()
 {
+    if(cpuFallbackMode)
+        return;
+        
     size_t slot = 0;
 
     foreach(source; gravitySources)

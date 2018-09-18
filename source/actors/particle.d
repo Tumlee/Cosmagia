@@ -39,22 +39,31 @@ class AParticle : Actor
 
     override bool tick()
     {
-        //Ticking always happens after gravitational calculations.
-        //Our only job is to check the output and set position accordingly.
         auto oldVel = vel;
-        foreach(size_t s; 0 .. numMovesteps)
+        
+        if(cpuFallbackMode)
         {
-            auto step = getMovestep(this, s);
-            pos = XYPoint(step.posx, step.posy);
-            vel = XYPoint(step.velx, step.vely);
-
-            if(step.collision != -1)
-            {
-                gravitySources[step.collision].vel += vel;
+            if(stepGravityCPU() == false)
                 return false;
+        }
+        else
+        {
+            //Ticking always happens after gravitational calculations.
+            //Our only job is to check the output and set position accordingly.
+            foreach(size_t s; 0 .. numMovesteps)
+            {
+                auto step = getMovestep(this, s);
+                pos = XYPoint(step.posx, step.posy);
+                vel = XYPoint(step.velx, step.vely);
+
+                if(step.collision != -1)
+                {
+                    gravitySources[step.collision].vel += vel;
+                    return false;
+                }
+                
+                pqueue.pushPosition(pos);
             }
-            
-            pqueue.pushPosition(pos);
         }
 
         if(pos.mag() > 1024)
@@ -63,6 +72,39 @@ class AParticle : Actor
         if(gameLoop.renderingIsEnabled())
             drawWithTrail(vel - oldVel);
             
+        return true;
+    }
+
+    bool stepGravityCPU()
+    {
+        foreach(s; 0 .. numMovesteps)
+        {
+            XYPoint accel = XYPoint.origin;
+            
+            foreach(source; gravitySources)
+            {
+                //Calculate gravitational pull and distance.
+                //Note that to avoid a sqrt() operation, we divide by dsquared, since
+                //gravitational force is inverse to distance squared.
+                XYPoint d = source.pos - pos;
+                float dsquared = (d.x * d.x) + (d.y * d.y);
+                accel = polarCoord(source.mass / dsquared, d.ang());
+
+                float combinedRadius = radius + source.radius;
+
+                //Particle is touching a gravitational source.
+                if((combinedRadius * combinedRadius) > dsquared)
+                {
+                    source.vel += vel;
+                    return false;
+                }
+            }
+
+            vel += accel / numMovesteps;
+            pos += vel / numMovesteps;
+            pqueue.pushPosition(pos);
+        }
+        
         return true;
     }
 
