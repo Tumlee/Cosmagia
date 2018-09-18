@@ -114,10 +114,15 @@ void syncParticles()
     //OPTIMIZE: Instead of 256, use information from the GPU for the
     //best chunksize.
     gravityKernel.setArgs(devicePData, deviceGData, cast(uint) gravitySources.length, deviceMData, numMovesteps);
-    gravityKernel.enqueue([slot + (slot % 256)]);
+    gravityKernel.enqueue([slot.roundUpToNearest(256)]);
     
     //Read movement data back to the CPU.
     deviceMData.read(hostMData[0 .. slot * numMovesteps]);
+}
+
+size_t roundUpToNearest(size_t value, size_t interval)
+{
+    return (value - 1) + interval - ((value - 1) % interval);
 }
 
 ref const(ParticleMovestep) getMovestep(const AParticle particle, size_t step)
