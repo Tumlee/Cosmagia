@@ -112,10 +112,10 @@ void syncParticles()
     //Make sure the copy on the device side has enough room to fit
     //all of the incoming elements.
     if(devicePData.length < hostPData.length)
-        devicePData.allocate(hostPData.length);
+        devicePData.allocate(hostPData.length, CL_MEM_WRITE_ONLY);
 
     if(deviceMData.length < hostMData.length)
-        deviceMData.allocate(hostMData.length);
+        deviceMData.allocate(hostMData.length, CL_MEM_READ_ONLY);
 
     //Send it to the GPU.
     devicePData.write(hostPData[0 .. slot]);
