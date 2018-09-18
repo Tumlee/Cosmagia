@@ -83,9 +83,14 @@ void syncParticles()
         if(slot == hostPData.length)
         {
             if(hostPData.length == 0)
+            {
                 hostPData.length = 256;
-                
-            hostPData.length = hostPData.length * 2;
+            }
+            else
+            {
+                hostPData.length = hostPData.length * 2;
+            }
+            
             hostMData.length = hostPData.length * numMovesteps;
         }
 
@@ -142,9 +147,13 @@ void syncGravitySources()
         if(slot == hostGData.length)
         {
             if(hostGData.length == 0)
+            {
                 hostGData.length = 64;
-
-            hostGData.length = hostGData.length * 2;
+            }
+            else
+            {
+                hostGData.length = hostGData.length * 2;
+            }
         }
 
         hostGData[slot].posx = source.pos.x;
