@@ -7,7 +7,7 @@ import magra.glutil;
 import cosmagia.camera;
 import xypoint;
 
-QuadBuffer starQB, particleQB, gravQB, glowQB;
+QuadBuffer starQB, particleQB, gravQB, glowQB, fadeQB;
 Texture2D starTX, glowTX, dotTX;
 Texture2D pcolorTX, gcolorTX;
 
@@ -71,8 +71,13 @@ void loadResources()
     glowQB.addTexture(gcolorTX);
     glowQB.setBlendMode(GL_ONE_MINUS_DST_COLOR, GL_ONE);
 
+    fadeQB = new QuadBuffer;
+    fadeQB.addAttribute("vWorldPos", 0, 2);
+    fadeQB.setupShaderPair("worldfade");
+
     renderingQueue.registerLayer(starQB, 0);
     renderingQueue.registerLayer(particleQB, 1);
     renderingQueue.registerLayer(gravQB, 2);
     renderingQueue.registerLayer(glowQB, 3);
+    renderingQueue.registerLayer(fadeQB, 4);
 }

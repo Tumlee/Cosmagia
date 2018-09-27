@@ -20,6 +20,11 @@ void drawBG()
                         1, -1, 1, 0,
                         1, 1, 1, 1,
                         -1, 1, 0, 1]);
+
+    fadeQB.addElement([ -1, -1,
+                        1, -1,
+                        1, 1,
+                        -1, 1]);
 }
 
 void myTicker()
