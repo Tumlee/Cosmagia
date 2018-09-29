@@ -189,6 +189,11 @@ class CLMemory(T)
     
     //The number of elements contained in the memory buffer.
     private size_t numElements = 0;
+
+    //If this memory object is memory mapped, this will contain
+    //the memory mapped buffer.
+    private T* hostPtr = null;
+    cl_map_flags memoryMapFlags = 0;
     
     this()
     {
@@ -271,6 +276,54 @@ class CLMemory(T)
         int errorCode = clEnqueueReadBuffer(queue, memory, true, offset * T.sizeof,
                             copyElements * T.sizeof, &buffer[0], 0, null, null);
         checkErrorCode("clEnqueueReadBuffer", errorCode);
+    }
+
+    //Memory map this memory object. Currently only blocking calls are supported.
+    void mmap(cl_map_flags mapFlags)
+    {
+        if(isMMapped())
+            throw new Exception("Tried to mmap an already-mmapped CLMemory object");
+        
+        int errorCode;
+        hostPtr = cast(T*) clEnqueueMapBuffer(queue, memory, true, mapFlags, 0, T.sizeof * numElements, 0, null, null, &errorCode);
+        checkErrorCode("clEnqueueMapBuffer", errorCode);
+        memoryMapFlags = mapFlags;
+    }
+
+    void unmmap()
+    {
+        if(!isMMapped())
+            throw new Exception("Tried to unmmap a non-mmaped CLMemory object");
+            
+        int errorCode;
+        clEnqueueUnmapMemObject(queue, memory, cast(void*) hostPtr, 0, null, null);
+        hostPtr = null;
+        memoryMapFlags = 0;
+    }
+
+    bool isMMapped()
+    {
+        return hostPtr !is null;
+    }
+
+    //Indexing operations for accessing the host-side array for memory-mapped objects.
+    //For speed reasons, bounds checking is only done in debug builds.
+    ref const(T) opIndex(size_t index) pure nothrow
+    {
+        debug assert(hostPtr !is null, "Tried to read from a non-mmapped CLMemory object");
+        debug assert(index <= numElements, "Out of bounds read from mmmaped CLMemory object");
+        debug assert(memoryMapFlags & CL_MAP_READ, "Tried to read from a write-only CLMemory object");
+
+        return hostPtr[index];
+    }
+
+    T opIndexAssign(T data, size_t index) pure nothrow
+    {
+        debug assert(hostPtr !is null, "Tried to write to a non-mmapped CLMemory object");
+        debug assert(index <= numElements, "Out of bounds write to mmmaped CLMemory object");
+        debug assert(memoryMapFlags & CL_MAP_WRITE, "Tried to write to a read-only CLMemory object");
+
+        return hostPtr[index] = data;
     }
 
     //Returns an host-side array containing the contents of this memory.
