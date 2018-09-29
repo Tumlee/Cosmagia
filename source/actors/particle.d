@@ -88,7 +88,7 @@ class AParticle : Actor
                 //gravitational force is inverse to distance squared.
                 XYPoint d = source.pos - pos;
                 float dsquared = (d.x * d.x) + (d.y * d.y);
-                accel = polarCoord(source.mass / dsquared, d.ang());
+                accel += polarCoord(source.mass / dsquared, d.ang());
 
                 float combinedRadius = radius + source.radius;
 
