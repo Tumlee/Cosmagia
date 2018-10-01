@@ -88,6 +88,11 @@ void myTicker()
     stepParticles();
 }
 
+void postTicker()
+{
+    finalizeStepParticles();
+}
+
 void main(string[] args)
 {
     //Before anything, initialize OpenCL. If it is not available
@@ -120,5 +125,6 @@ void main(string[] args)
     
     gameLoop.tickRate = 60.0;
     gameLoop.preTick = &myTicker;
+    gameLoop.postTick = &postTicker;
     gameLoop.run();
 }

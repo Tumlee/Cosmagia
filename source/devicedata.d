@@ -7,6 +7,8 @@ import magra.globals;
 import cosmagia.clutil;
 import cosmagia.actors.particle;
 import cosmagia.actors.gravsource;
+import std.algorithm;
+import std.range;
 
 struct ParticleData
 {
@@ -34,13 +36,10 @@ struct GravityData
     float radius;
 }
 
-//Particle data arrays for the host and device.
-private ParticleData[] hostPData;
+//GPU-side particle and particle movement data.
 private CLMemory!ParticleData devicePData;
-
-//Particle movestep data, used as an output.
-private ParticleMovestep[] hostMData;
 private CLMemory!ParticleMovestep deviceMData;
+
 enum uint numMovesteps = 2;
 
 //If true, we do not call and OpenCL functions and use the CPU to calculate everything.
@@ -80,63 +79,61 @@ void stepParticles()
     //OPTIMIZE: This does not seem to be causing any performance issues for now,
     //but we should try to avoid using actorsOf here if possible.
     auto particles = actors.actorsOf!(AParticle)();
+    size_t numParticles = actors.countActorsOf!(AParticle)();
 
-    size_t slot = 0;
+    if(numParticles == 0)
+        return;
 
-    foreach(particle; particles)
+    //Reallocate devicePData if there isn't enough room to fit all the particles.
+    //Expand the deviceMData array to match.
+    while(numParticles > devicePData.length)
     {
-        //Allocate more room for particle data if needed.
-        if(slot == hostPData.length)
-        {
-            if(hostPData.length == 0)
-            {
-                hostPData.length = particleChunkSize;
-            }
-            else
-            {
-                hostPData.length = hostPData.length * 2;
-            }
-            
-            hostMData.length = hostPData.length * numMovesteps;
-        }
-
-        hostPData[slot].posx = particle.pos.x;
-        hostPData[slot].posy = particle.pos.y;
-        hostPData[slot].velx = particle.vel.x;
-        hostPData[slot].vely = particle.vel.y;
-        hostPData[slot].radius = particle.radius;
-        particle.dataSlot = slot;
-        slot++;
+        size_t numDeviceParticles = max(particleChunkSize, devicePData.length * 2);
+        devicePData.allocate(numDeviceParticles, CL_MEM_WRITE_ONLY | CL_MEM_ALLOC_HOST_PTR);
+        deviceMData.allocate(devicePData.length * numMovesteps, CL_MEM_READ_ONLY | CL_MEM_ALLOC_HOST_PTR);
     }
 
-    //Make sure the copy on the device side has enough room to fit
-    //all of the incoming elements.
-    if(devicePData.length < hostPData.length)
-        devicePData.allocate(hostPData.length, CL_MEM_WRITE_ONLY);
+    devicePData.mmap(CL_MAP_WRITE);
 
-    if(deviceMData.length < hostMData.length)
-        deviceMData.allocate(hostMData.length, CL_MEM_READ_ONLY);
+    foreach(slot, particle; particles.enumerate)
+    {
+        ParticleData pdata;
+        pdata.posx = particle.pos.x;
+        pdata.posy = particle.pos.y;
+        pdata.velx = particle.vel.x;
+        pdata.vely = particle.vel.y;
+        pdata.radius = particle.radius;
+        devicePData[slot] = pdata;
+        particle.dataSlot = slot;
+    }
 
-    //Send it to the GPU.
-    devicePData.write(hostPData[0 .. slot]);
+    devicePData.unmmap();
 
     //Run the kernel. To avoid situations where we end up with a very
     //small groupsize, we pad the data to the nearest 256, rounding up.
     gravityKernel.setArgs(devicePData, deviceGData, cast(uint) gravitySources.length, deviceMData, numMovesteps);
-    gravityKernel.enqueue([slot.roundUpToNearest(particleChunkSize)]);
-    
-    //Read movement data back to the CPU.
-    deviceMData.read(hostMData[0 .. slot * numMovesteps]);
+    gravityKernel.enqueue([numParticles.roundUpToNearest(particleChunkSize)]);
+
+    //Open movement data for reading so Particles can read the data.
+    deviceMData.mmap(CL_MAP_READ);
+}
+
+void finalizeStepParticles()
+{
+    if(cpuFallbackMode || !deviceMData.isMMapped())
+        return;
+
+    deviceMData.unmmap();
+}
+
+ref const(ParticleMovestep) getMovestep(const AParticle particle, size_t step) nothrow
+{
+    return deviceMData[particle.dataSlot * numMovesteps + step];
 }
 
 size_t roundUpToNearest(size_t value, size_t interval)
 {
     return (value - 1) + interval - ((value - 1) % interval);
-}
-
-ref const(ParticleMovestep) getMovestep(const AParticle particle, size_t step)
-{
-    return hostMData[particle.dataSlot * numMovesteps + step];
 }
 
 void syncGravitySources()
