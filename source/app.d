@@ -85,7 +85,7 @@ void myTicker()
         updateGravitySources();
     }
 
-    syncParticles();
+    stepParticles();
 }
 
 void main(string[] args)

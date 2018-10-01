@@ -72,7 +72,7 @@ void initDeviceData()
     gravityKernel = new CLKernel("gravity", "moveParticles");
 }
 
-void syncParticles()
+void stepParticles()
 {
     if(cpuFallbackMode)
         return;
