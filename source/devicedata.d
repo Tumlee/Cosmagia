@@ -141,32 +141,22 @@ void syncGravitySources()
     if(cpuFallbackMode)
         return;
         
-    size_t slot = 0;
+    //Ensure there is enough space to fit all the gravity sources.
+    while(gravitySources.length > deviceGData.length)
+        deviceGData.allocate(max(64, deviceGData.length * 2), CL_MEM_WRITE_ONLY | CL_MEM_ALLOC_HOST_PTR);
 
-    foreach(source; gravitySources)
+    deviceGData.mmap(CL_MAP_WRITE);
+
+    foreach(slot, source; gravitySources)
     {
-        if(slot == hostGData.length)
-        {
-            if(hostGData.length == 0)
-            {
-                hostGData.length = 64;
-            }
-            else
-            {
-                hostGData.length = hostGData.length * 2;
-            }
-        }
-
-        hostGData[slot].posx = source.pos.x;
-        hostGData[slot].posy = source.pos.y;
-        hostGData[slot].mass = source.mass;
-        hostGData[slot].radius = source.radius;
+        GravityData gdata;
+        gdata.posx = source.pos.x;
+        gdata.posy = source.pos.y;
+        gdata.mass = source.mass;
+        gdata.radius = source.radius;
+        deviceGData[slot] = gdata;
         source.dataSlot = slot;
-        slot++;
     }
 
-    if(deviceGData.length < hostGData.length)
-        deviceGData.allocate(hostGData.length);
-
-    deviceGData.write(hostGData[0 .. slot]);
+    deviceGData.unmmap();
 }
