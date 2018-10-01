@@ -41,6 +41,11 @@ class ActorList
         return actors.map!(a => cast(T) a)
                     .filter!(a => a !is null);
     }
+
+    size_t countActorsOf(T = Actor)()
+    {
+        return actors.count!(a => cast(T) a !is null);
+    }
     
     void clear(T = Actor)()
     {
